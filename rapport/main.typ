@@ -50,7 +50,7 @@ L'objectif de l'analyse cinématique est de déterminer la position, la vitesse 
 
 À partir de la géométrie du système, la position du point $A$ s'obtient par la somme vectorielle :
 
-$ 
+$
 accent(O A, arrow) = accent(O B, arrow) + accent(B A, arrow)
 $
 
