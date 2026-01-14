@@ -17,8 +17,8 @@ teta = vAngOB * t + posIni;
 
 phiX = -teta
 posX = (l1 * cos(teta)) + (l2 * cos(phiX))
-vX = diff(posX)
-aX = diff(vX)
+vX = diff(posX) ./ diff(t(1:end))
+aX = diff(vX) ./ diff(t(2:end))
 
 hFig = figure('Name', 'Mouvement horizontal', 'NumberTitle', 'off');
 subplot(nbPlots, 1, 1);
@@ -51,9 +51,9 @@ acos(1 - 1 cos(teta)) = phi
 %}
 
 phiY = acos(1 - (1 * cos(teta)))
-posX = (l1 * sin(teta)) + (l2 * sin(phiY))
-vY = diff(posX) ./ diff(t)
-aY = diff(vX)
+posY = (l1 * sin(teta)) + (l2 * sin(phiY))
+vY = diff(posY) ./ diff(t(1:end))
+aY = diff(vY) ./ diff(t(2:end))
 
 vFig = figure('Name', 'Mouvement Vertical', 'NumberTitle', 'off');
 subplot(nbPlots, 1, 1);
@@ -69,4 +69,3 @@ grid on;
 title('vitesse vs angle');
 xlabel('angle (rad)');
 ylabel('vitesse (m/s)');
-
