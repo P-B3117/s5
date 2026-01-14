@@ -236,7 +236,47 @@ Ainsi, lorsque $θ(t)$ est imposé par $M_O$, le moteur $M_B$ doit suivre automa
 
 = Statique & Dynamique
 
+L’étude a été réalisée sur le segment $B A$, soumis à son poids propre et à la masse ponctuelle à $A$. Deux cas sont considérés : (1) un robot immobile (statique) et (2) un bras en rotation avec accélération angulaire constante (dynamique).
+
+
 == Statique
+
+Lorsque le bras est immobile, seules les forces de gravité agissent sur $B A$ et sur la masse ponctuelle $A$. Dans ce cas, les forces et moments sont calculés à partir de l'équilibre :
+
+- Forces projetées sur B
+
+$
+F_(B A) = m_(B A) g cos(φ)
+$
+
+$
+F_A = m_A g cos(φ)
+$
+
+$
+F_B = F_(B A) + F_A
+$\
+
+- Moment au point B
+
+  Le poids du bras est modélisé comme appliqué à son centre de gravité, soit à $l_2/2$ :
+
+  $
+  C_{B A} = m_(B A) g (l_2/2\)
+  $
+
+  $
+  C_A = m_A g l_2
+  $
+
+  On obtient le couple externe à la jonction :
+
+  $
+  C_B = -(C_(B A) + C_A)
+  $\
+
+Ce couple oppose la gravité et doit être appliqué par le moteur pour maintenir le bras immobile.
+
 
 == Dynamique
 
