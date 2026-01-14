@@ -52,7 +52,7 @@ acos(1 - 1 cos(teta)) = phi
 
 phiY = acos(1 - (1 * cos(teta)))
 posX = (l1 * sin(teta)) + (l2 * sin(phiY))
-vY = diff(posX)
+vY = diff(posX) ./ diff(t)
 aY = diff(vX)
 
 vFig = figure('Name', 'Mouvement Vertical', 'NumberTitle', 'off');
@@ -64,7 +64,7 @@ xlabel('angle (rad)');
 ylabel('position (m)');
 
 subplot(nbPlots, 1, 2);
-plot(teta(2:end), vX);
+plot(teta(2:end), vY);
 grid on;
 title('vitesse vs angle');
 xlabel('angle (rad)');

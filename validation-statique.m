@@ -22,9 +22,9 @@ m_OB = 1;
 m_AB= 1;
 m_A = 0.1;
 alpha_AB = 5;
-G  = 9.81;
+G  = -9.81;
 
-phi = linspace(0,-pi/3,100);
+phi = linspace(pi/3,-pi/3,100);
 figure('Name', 'Hello', 'NumberTitle', 'off');
 
 
@@ -43,7 +43,6 @@ grid on;
 title('Couple rotation B en fonction de phi');
 xlabel('phi (rad)');
 ylabel('Couple Force B (N/m)');
-xlim([-pi/3, 0]);
 
 % Dynamique %
 omega_AB = sqrt(2 * alpha_AB * abs(phi - phi(1)));
@@ -75,7 +74,6 @@ grid on;
 title('Couple rotation B dynamique en fonction de phi');
 xlabel('phi (rad)');
 ylabel('Couple Force B (N/m)');
-xlim([-pi/3, 0]);
 
 subplot(3, 1, 3);
 plot(phi, sqrt(force_B_dyn_x.^2 + force_B_dyn_y.^2));
@@ -83,4 +81,4 @@ grid on;
 title('Force B dynamique - Magnitude');
 xlabel('phi (rad)');
 ylabel('Force totale (N)');
-xlim([-pi/3, 0]);
+
