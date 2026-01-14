@@ -281,18 +281,18 @@ Ce couple oppose la gravité et doit être appliqué par le moteur pour mainteni
 == Dynamique
 
 
-Après l'étude de la statique, on analyse maintenant le cas où le robot est en mouvement. Plus précisément, le bras $O B$ est entraîné par le moteur $M_O$ avec une vitesse angulaire constante
+Après l'étude de la statique, on analyse maintenant le cas où le robot est en mouvement. Plus précisément, le bras $B A$ est entraîné par le moteur $M_B$ avec une accélération angulaire constante
 $
-accent(θ, dot) = omega_{O B} = 25 "rad/s".
+omega_{B A} = 5 "rad/s^2".
 $
-La rotation du bras entraîne les segments $O B$ et $B A$, ce qui induit des efforts inertiels supplémentaires dans l'articulation $B$.
+La rotation du bras entraîne le segment $B A$, ce qui induit des efforts inertiels supplémentaires dans l'articulation $B$.
 
 === Hypothèses utilisées
 
 - $l_1 = l_2 = 0.25 "m"$,
-- masses réparties uniformément sur $O B$ et $B A$,
+- masses réparties uniformément sur $B A$,
 - $m_A$ concentrée en $A$,
-- $accent(θ, dot)$ constant, donc $alpha_{O B}=0$,
+- Bra initialement au repos, donc $alpha_0 {B A}=0$,
 - deux trajectoires imposées à $A$ :
   - mouvement horizontal : $phi = -theta$
   - mouvement vertical : $phi = arccos(1-cos(theta))$.
@@ -322,7 +322,7 @@ $
 F_{B} = m_{B A} a_{B A} + m_A a_{A}.
 $
 
-Selon la direction du mouvement, ces efforts se projettent sur l'axe horizontal ou vertical en fonction de $theta$ et $phi$.
+Selon la direction du mouvement, ces efforts se projettent sur l'axe horizontal ou vertical en fonction de $phi$.
 
 === Couple transmis à $B$
 
@@ -333,15 +333,12 @@ $
 I = (m_{B A}l_2^2)/3 + m_A l_2^2
 $
 
-- comme $alpha = 0$ :
+- comme $alpha_{A B} = 5$ :
 $
-C_B = I alpha = 0
+C_B = I alpha_AB - C_{A B} - C_A
 $
 
-Ce résultat montre que le couple dynamique pur est nul pour une vitesse angulaire constante. Cependant, le moteur doit tout de même fournir l'énergie pour contrer :
-
-- les forces centrifuges transmises à l'articulation,
-- les effets gravitaires lorsque $phi eq.not 0$ (cas vertical).
+Ce résultat utilise les couples $C_{A B}$ et $C_A$ calculés dans la section statique, car la force gravitationnelle exerce encore son effet de levier.
 
 
 == Représentation avec MATLAB
