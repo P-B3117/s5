@@ -57,7 +57,7 @@ aY = diff(vY) ./ diff(t(2:end))
 
 vFig = figure('Name', 'Mouvement Vertical', 'NumberTitle', 'off');
 subplot(nbPlots, 1, 1);
-plot(teta, posX);
+plot(teta, posY);
 grid on;
 title('position vs angle');
 xlabel('angle (rad)');
