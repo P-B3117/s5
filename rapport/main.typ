@@ -280,7 +280,78 @@ Ce couple oppose la gravité et doit être appliqué par le moteur pour mainteni
 
 == Dynamique
 
+
+Après l'étude de la statique, on analyse maintenant le cas où le robot est en mouvement. Plus précisément, le bras $O B$ est entraîné par le moteur $M_O$ avec une vitesse angulaire constante
+$
+accent(θ, dot) = omega_{O B} = 25 "rad/s".
+$
+La rotation du bras entraîne les segments $O B$ et $B A$, ce qui induit des efforts inertiels supplémentaires dans l'articulation $B$.
+
+=== Hypothèses utilisées
+
+- $l_1 = l_2 = 0.25 "m"$,
+- masses réparties uniformément sur $O B$ et $B A$,
+- $m_A$ concentrée en $A$,
+- $accent(θ, dot)$ constant, donc $alpha_{O B}=0$,
+- deux trajectoires imposées à $A$ :
+  - mouvement horizontal : $phi = -theta$
+  - mouvement vertical : $phi = arccos(1-cos(theta))$.
+
+Ces relations assurent que le point $A$ suit respectivement une droite horizontale ou verticale.
+
+=== Forces au point B
+
+Lorsque $B A$ se déplace, les masses qui lui sont attachées subissent deux composantes d’accélération :
+
+- normale (centripète) :
+$
+a_n = accent(θ, dot)^2 r
+$
+- tangentielle :
+$
+a_t = alpha r = 0
+$
+puisque $accent(θ, dot)$ est constant.
+
+Pour les deux éléments :
+- centre de masse de $B A$ : $r = l_2/2$,
+- masse ponctuelle à $A$ : $r = l_2$.
+
+Les forces équivalentes transmises à l'articulation s'écrivent donc :
+$
+F_{B} = m_{B A} a_{B A} + m_A a_{A}.
+$
+
+Selon la direction du mouvement, ces efforts se projettent sur l'axe horizontal ou vertical en fonction de $theta$ et $phi$.
+
+=== Couple transmis à $B$
+
+Lorsque le bras tourne, le moteur $M_B$ doit fournir un moment dynamique lié à l'inertie des masses :
+
+- moment d'inertie total autour de $B$ :
+$
+I = (m_{B A}l_2^2)/3 + m_A l_2^2
+$
+
+- comme $alpha = 0$ :
+$
+C_B = I alpha = 0
+$
+
+Ce résultat montre que le couple dynamique pur est nul pour une vitesse angulaire constante. Cependant, le moteur doit tout de même fournir l'énergie pour contrer :
+
+- les forces centrifuges transmises à l'articulation,
+- les effets gravitaires lorsque $phi eq.not 0$ (cas vertical).
+
+
 == Représentation avec MATLAB
 
+#figure(
+  image("image-5.jpg", width: 80%),
+)\
 
 == Analyse des courbes obtenues avec MATLAB
+
+[Insert relevant text]
+
+
