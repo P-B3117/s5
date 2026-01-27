@@ -136,14 +136,27 @@ for j = 1:5
   plot(x_lims, [45 * kmhToMs, 45 * kmhToMs], 'g', 'LineWidth', 2); % Green bar
   plot(x_lims, [15 * kmhToMs, 15 * kmhToMs], 'r', 'LineWidth', 2); % red bar
   plot(x_lims, [10 * kmhToMs, 10 * kmhToMs], 'g', 'LineWidth', 2); % Green bar
-  mu = 0.1 * j + 0.4
-
   % Initialize a container for legend labels
   labels = {};
 
+  mu = 0.05 * j + 0.4
+    % Your target mu values from the previous loop
+  valveResult = 0;
+
+  % Get the coefficients from your polyfit (pMu = [a, b, c])
+  aMu = pMu(1);
+  bMu = pMu(2);
+  cMu = pMu(3);
+
+  coeffs = [aMu, bMu, (cMu - mu)];
+  possible_x = roots(coeffs);
+
+  % 'roots' returns 2 values for a quadratic.
+  % We pick the one between 0 and 100.
+  valveResult = possible_x(possible_x >= 0 & possible_x <= 80);
+
   for i = 1:nbPlots
     height = trajectoires(:, i);
-    height(end)
     angle = angles(:, i)';
     friction =  cos(angle);
     frictionMax = (mu + muErr) * g * cos(angle);
@@ -169,8 +182,7 @@ for j = 1:5
     labels{i} = [ 'Ey = ', num2str(height(end), '%.1f'), 'm' ];
   endfor
   legend(labels, 'location', 'northeastoutside', 'FontSize', 8);
-  title(['mu (+/- ', num2str(muErr),')= ', num2str(mu)]);
-  title('Vitesse dépendant de la position');
+  title({['mu (+/- ', num2str(muErr),')= ', num2str(mu)], ['valve (%) = ', num2str(valveResult)]});
   xlabel('position (m)'); ylabel('vitesse (m/s)');
 endfor
 
