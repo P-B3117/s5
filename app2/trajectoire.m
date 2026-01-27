@@ -2,6 +2,7 @@
 clc;
 close all;
 clear all;
+pkg load signal;
 
 nbPlots = 30;
 polynomeDegree = 4;
@@ -11,6 +12,7 @@ polynomeDegree = 4;
 % − Vitesse finale du participant au point E, erreur dans cette vitesse causée par l’erreur RMS dans μ𝑓.
 % − Graphique de la vitesse du participant le long de la trajectoire (en fonction de la coordonnée horizontale, x)
 % − Graphique des données avec droite de lissage et son erreur quadratique / RMS ou sa corrélation.
+% − Ouverture de la valve en % qui correspond au coefficient de friction selon le polynôme d’approximation.
 
 yIni = 30;
 m = 80;
@@ -73,20 +75,23 @@ xlabel('Valve (%)'); ylabel('coefficient de friction');
 
 ouverture = [0 10 20 30 40 50 60 70 80 90 100];
 muEmp = [0.87 0.78 0.71 0.61 0.62 0.51 0.51 0.49 0.46 0.48 0.46];
+nbPlotsMu = length(ouverture);
 xPoints = linspace(0, 100, nbPlots);
 
 pMu = polyfit(ouverture, muEmp, 2);
-muTrajectoire = polyval(pMu, xPoints);
-plot(xPoints, muTrajectoire);
-plot(ouverture, muEmp, 'x')
+muPlot = polyval(pMu, xPoints);
+muTrajectoire = polyval(pMu, ouverture);
+plot(xPoints, muPlot);
+plot(ouverture, muEmp, 'x');
 
-err = zeros(length(ouverture), 1);
+err = zeros(nbPlotsMu, 1);
 
 disp("finished calculating friction curve");
+disp(length(muTrajectoire));
 
-err(:, 1) = abs(muTrajectoire(1) - muEmp(1));
-for i = 2:(length(ouverture))
-  err(i) = abs(muTrajectoire(round(nbPlots * ( 0.01 * ouverture(i)))) - muEmp(i));
+%err(:, 1) = abs(muTrajectoire(1) - muEmp(1));
+for i = 1:nbPlotsMu
+  err(i) = muTrajectoire((ouverture(i) / 10) + 1) - muEmp(i);
 endfor
 
 disp(length(err));
@@ -96,6 +101,9 @@ disp(length(muErr));
 
 disp("finished finding friction's imprecision");
 disp(muErr);
+
+%plot(xPoints, muTrajectoire - muErr(:));
+%plot(xPoints, muTrajectoire + muErr(:));
 
 % Vitesse time
 %
@@ -117,16 +125,16 @@ figure; hold on; grid on;
 title('Vitesse dépendant de la position');
 xlabel('position'); ylabel('vitesse');
 
-msToKmh = 1/(1000/3600);
+kmhToMs = (1000/3600);
 xValve = linspace(0, 100, nbPlots);
 xPoints = linspace(0, 25, nbPlots);
 
 x_lims = [0, xPoints(end)];
 
 
-plot(x_lims, [45, 45], 'g', 'LineWidth', 2); % Green bar
-plot(x_lims, [15, 15], 'r', 'LineWidth', 2); % red bar
-plot(x_lims, [10, 10], 'g', 'LineWidth', 2); % Green bar
+plot(x_lims, [45 * kmhToMs, 45 * kmhToMs], 'g', 'LineWidth', 2); % Green bar
+plot(x_lims, [15 * kmhToMs, 15 * kmhToMs], 'r', 'LineWidth', 2); % red bar
+plot(x_lims, [10 * kmhToMs, 10 * kmhToMs], 'g', 'LineWidth', 2); % Green bar
 
 for i = 1:length(trajectoires)
   mu = 0.6192;
@@ -149,11 +157,10 @@ for i = 1:length(trajectoires)
 
   v = sqrt(2 * energy_balance);
 
-  plot(xPoints, v * msToKmh);
+  plot(xPoints, v);
 %  plot(xPoints, vMin .* msToKmh);
 %  plot(xPoints, vMax .* msToKmh);
 endfor
 %}
 
-% − Ouverture de la valve en % qui correspond au coefficient de friction selon le polynôme d’approximation.
 
