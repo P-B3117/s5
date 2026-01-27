@@ -4,7 +4,8 @@ close all;
 clear all;
 pkg load signal;
 
-nbPlots = 30;
+nbPlots = 8;
+nbPoints = 30;
 polynomeDegree = 4;
 
 % − Valeur de 𝑦𝑓 (hauteur à la fin de la trajectoire au point E).
@@ -36,7 +37,7 @@ endfor
 disp("finished calculating polynomials");
 
 
-xPoints = linspace(0, 25, nbPlots);
+xPoints = linspace(0, 25, nbPoints);
 trajectoires = zeros(length(xPoints), nbPlots + 1);
 derivatives = zeros(length(xPoints), nbPlots + 1);
 angles = zeros(length(xPoints), nbPlots + 1);
@@ -76,7 +77,7 @@ xlabel('Valve (%)'); ylabel('coefficient de friction');
 ouverture = [0 10 20 30 40 50 60 70 80 90 100];
 muEmp = [0.87 0.78 0.71 0.61 0.62 0.51 0.51 0.49 0.46 0.48 0.46];
 nbPlotsMu = length(ouverture);
-xPoints = linspace(0, 100, nbPlots);
+xPoints = linspace(0, 100, nbPoints);
 
 pMu = polyfit(ouverture, muEmp, 2);
 muPlot = polyval(pMu, xPoints);
@@ -96,7 +97,7 @@ endfor
 
 disp(length(err));
 % muErr = muErr = sqrt((1 / length(err)) * sum(err.^2));
-muErr = rms(err)
+muErr = sqrt(mean(err.^2));
 disp(length(muErr));
 
 disp("finished finding friction's imprecision");
@@ -122,45 +123,58 @@ disp(muErr);
 % v = sqrt(2g(yIni - trajectoire(x) - W(x)))
 
 figure; hold on; grid on;
-title('Vitesse dépendant de la position');
-xlabel('position'); ylabel('vitesse');
 
 kmhToMs = (1000/3600);
-xValve = linspace(0, 100, nbPlots);
-xPoints = linspace(0, 25, nbPlots);
+xValve = linspace(0, 100, nbPoints);
+xPoints = linspace(0, 25, nbPoints);
 
 x_lims = [0, xPoints(end)];
 
+for j = 1:5
+  subplot(2, 3, j);
+  hold on; grid on;
+  plot(x_lims, [45 * kmhToMs, 45 * kmhToMs], 'g', 'LineWidth', 2); % Green bar
+  plot(x_lims, [15 * kmhToMs, 15 * kmhToMs], 'r', 'LineWidth', 2); % red bar
+  plot(x_lims, [10 * kmhToMs, 10 * kmhToMs], 'g', 'LineWidth', 2); % Green bar
+  mu = 0.1 * j + 0.4
 
-plot(x_lims, [45 * kmhToMs, 45 * kmhToMs], 'g', 'LineWidth', 2); % Green bar
-plot(x_lims, [15 * kmhToMs, 15 * kmhToMs], 'r', 'LineWidth', 2); % red bar
-plot(x_lims, [10 * kmhToMs, 10 * kmhToMs], 'g', 'LineWidth', 2); % Green bar
+  % Initialize a container for legend labels
+  labels = {};
 
-for i = 1:length(trajectoires)
-  mu = 0.6192;
-  height = trajectoires(:, i);
-  angle = angles(:, i)';
-  friction = mu * g * cos(angle);
-  frictionMax = (mu + muErr) * g * cos(angle);
-  frictionMin = (mu - muErr) * g * cos(angle);
+  for i = 1:nbPlots
+    height = trajectoires(:, i);
+    height(end)
+    angle = angles(:, i)';
+    friction =  cos(angle);
+    frictionMax = (mu + muErr) * g * cos(angle);
+    frictionMin = (mu - muErr) * g * cos(angle);
 
-  W = cumtrapz(xPoints(:), friction(:));
-  WMax = cumtrapz(frictionMax(:), xPoints(:));
-  WMin = cumtrapz(frictionMin(:), xPoints(:));
+    W = cumtrapz(xPoints(:), friction(:));
+    WMax = cumtrapz(frictionMax(:), xPoints(:));
+    WMin = cumtrapz(frictionMin(:), xPoints(:));
 
-  % 3. Energy Balance: v = sqrt( 2 * (G_potential_loss - Work_loss) )
-  % Height loss is (yIni - height)
-  energy_balance = (g * (yIni - height(:))) - (W(:));
+    % 3. Energy Balance: v = sqrt( 2 * (G_potential_loss - Work_loss) )
+    % Height loss is (yIni - height)
+    energy_balance = (g * (yIni - height(:))) - (mu * g .* W(:));
 
-  % Ensure we don't take the square root of a negative (if friction stops the person)
-  energy_balance(energy_balance < 0) = 0;
+    % Ensure we don't take the square root of a negative (if friction stops the person)
+    energy_balance(energy_balance < 0) = 0;
 
-  v = sqrt(2 * energy_balance);
+    v = sqrt(2 * energy_balance);
 
-  plot(xPoints, v);
-%  plot(xPoints, vMin .* msToKmh);
-%  plot(xPoints, vMax .* msToKmh);
+    plot(xPoints, v);
+  %  plot(xPoints, vMin .* msToKmh);
+  %  plot(xPoints, vMax .* msToKmh);
+    axis([0 25 0 15]);
+    labels{i} = [ 'Ey = ', num2str(height(end), '%.1f'), 'm' ];
+  endfor
+  legend(labels, 'location', 'northeastoutside', 'FontSize', 8);
+  title(['mu (+/- ', num2str(muErr),')= ', num2str(mu)]);
+  title('Vitesse dépendant de la position');
+  xlabel('position (m)'); ylabel('vitesse (m/s)');
 endfor
-%}
+
+axis auto;
+
 
 
