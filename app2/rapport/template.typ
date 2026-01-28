@@ -23,7 +23,7 @@
         ),
       )
     },
-    footer: context 
+    footer: context
       if counter(page).get() > (0,) {
         stack(spacing: 0.7em,
           line(length: 100%),
@@ -41,7 +41,7 @@
         )
       }
   )
-  set text(font: "Noto Serif", size: 12pt, lang: "fr")
+  set text(font: "Noto Serif", size: 11pt, lang: "fr")
   set heading(numbering: "1.1")
 
   // Set run-in subheadings, starting at level 3.
@@ -94,9 +94,9 @@
   )
 
   v(1fr, weak: true)
-  
+
   align(center, text([Remis le #date]))
-  
+
   // Table of contents.
   pagebreak()
   outline(depth: 3)
@@ -117,7 +117,7 @@
 }
 
 #let Annexe(breakPage : true, title : "Annexe", body,) = {
-  
+
   if breakPage {
     pagebreak() // Optional: Start appendix on a new page
   }
@@ -130,7 +130,7 @@
   // For now, it will follow the `numbering` argument you pass in.
 
   [= #title <annexe>]
-  
+
   counter(heading).update(0)
   set heading(numbering: "A.1.")
 
