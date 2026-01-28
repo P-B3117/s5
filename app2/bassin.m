@@ -14,7 +14,7 @@ f_fin = 1.10;
 v_initiale = sqrt(2 * a_gravite * h_saut);
 v_equilibre = sqrt((m_participant * a_gravite * (1 - k_flotabilite)) / b_eau);
 
-delta_z_bassin = (m_participant / (2 * b_eau * v_equilibre)) * log((v_initiale - v_equilibre) / ((f_fin - 1) * v_equilibre));
+delta_z_bassin = (m_participant / (2 * b_eau)) * log((v_initiale - v_equilibre) / ((f_fin - 1) * v_equilibre));
 
 
 % --- Affichage des résultats ---
@@ -25,7 +25,7 @@ disp(['Profondeur sécuritaire du bassin Δz = ', num2str(delta_z_bassin), ' m']
 
 % --- Graphique de la vitesse en fonction de la profondeur ---
 z = linspace(0, delta_z_bassin, 500);
-v_z = v_equilibre + (v_initiale - v_equilibre) .* exp(-(2 * b_eau * v_equilibre / m_participant) .* z);
+v_z = v_equilibre + (v_initiale - v_equilibre) .* exp(-(2 * b_eau / m_participant) .* z);
 
 
 figure
