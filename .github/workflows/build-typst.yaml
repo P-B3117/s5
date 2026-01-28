@@ -8,9 +8,26 @@ on:
     workflow_dispatch:
 
 jobs:
-    build:
+    discover:
         runs-on: ubuntu-latest
+        outputs:
+            matrix: ${{ steps.set-matrix.outputs.matrix }}
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
 
+            - name: Find Typst files
+              id: set-matrix
+              run: |
+                  files=$(find . -name "main.typ" -type f | jq -R -s -c 'split("\n")[:-1]')
+                  echo "matrix=$files" >> "$GITHUB_OUTPUT"
+
+    build:
+        needs: discover
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                file: ${{ fromJson(needs.discover.outputs.matrix) }}
         steps:
             - name: Checkout repository
               uses: actions/checkout@v4
@@ -20,22 +37,23 @@ jobs:
               with:
                   typst-version: "latest"
 
-            - name: Build all Typst documents
+            - name: Build Typst document
               run: |
-                  find . -name "main.typ" -type f | while read -r file; do
-                    dir=$(dirname "$file")
-                    parent_dir=$(basename "$(dirname "$dir")")
-                    current_dir=$(basename "$dir")
-                    output_name="${parent_dir}-${current_dir}.pdf"
-                    
-                    echo "Building: $file -> $dir/$output_name"
-                    cd "$dir"
-                    typst compile main.typ "$output_name"
-                    cd - > /dev/null
-                  done
+                  file="${{ matrix.file }}"
+                  dir=$(dirname "$file")
+                  parent_dir=$(basename "$(dirname "$dir")")
+                  current_dir=$(basename "$dir")
+                  output_name="${parent_dir}-${current_dir}.pdf"
 
-            - name: Upload artifacts
+                  echo "Building: $file -> $dir/$output_name"
+                  cd "$dir"
+                  typst compile main.typ "$output_name"
+
+                  echo "pdf_path=$dir/$output_name" >> "$GITHUB_ENV"
+                  echo "artifact_name=${parent_dir}-${current_dir}" >> "$GITHUB_ENV"
+
+            - name: Upload artifact
               uses: actions/upload-artifact@v4
               with:
-                  name: typst-documents
-                  path: "**/*.pdf"
+                  name: ${{ env.artifact_name }}
+                  path: ${{ env.pdf_path }}
