@@ -11,8 +11,64 @@
   auteurs_footer: true,
 )
 
-= Introduction
+= Démarches
 
+== Calculs de la hauteur finale de la trajectoire
+
+La trajectoire est considérée comme étant une fonction polynomiale de degré 4, du type: $$y(x) = a x^4 + b x^3 + c x^2 + d x + e$$
+
+Puisque le but est de trouver la hauteur finale de la glissade. On dérive la fonction, ce qui nous donne l'angle de la pente, puis statuant que l'angle final ($x = 25$) devait être égal à 0:
+
+$ theta = arctan((dif y) / (dif x)) $
+$ 0 = arctan((dif ) / (dif x) a x^4 - b x^3 + c x^2 - d x + e) $
+
+Les polynômes suivants pour les coefficients $a$, $b$, $c$, $d$, et $e$ sont trouvés essayant multiples équations (en statuant un nuage de hauteur finale possible dans les marges données dans le devis) jusqu'à trouver celle qui satisfait les conditions :
+
+$a = 0.000567927$
+$b = -0.033409$
+$c = 0.637314$
+$d = -4.62612$
+$e = 30$
+
+Ce qui donne une hauteur finale de 12,5m avec l'équation:
+
+$ y(x) = 0.000567927 x^4 - 0.033409 x^3 + 0.637314 x^2 - 4.62612 x + 30 $
+
+== Calculs pour le coefficient de friction ($mu _f$)
+
+Après observation des points, nous avons traités la courbe de coefficient de friction en fonction de l'ouverture de la valve comme étant de degré 2, du type: $f(x) = a x^2 + b x + c$.
+
+Après les calculs, nous avons trouvé les coefficients suivants :
+
+$$a = 5.20979e-05 $$
+$$b = -0.00916434 $$
+$$c = 0.866783 $$
+
+Ce qui donne :
+
+$ mu(x) = 0.0000520979 x^2 - 0.00916434 x + 0.866783 $
+
+La valeur d'erreur $r m s$ de $mu$ est de: 0.018041 ce qui est acceptable compte tenu qu'il représente 3% d'erreur pour la valeur de $mu$ finale obtenue.
+
+== Calculs de vitesse du de la personne dans la glissade
+
+Afin de calculer la vitesse de la personne descendant la glissade d'eau, nous avons utilisés les formules d'énergies de la manière suivante:
+
+$ E_g = E_p + E_k + W $
+$ F_f (x) = mu * m g * cos(theta) * x $
+$ W = - integral^x_0 F_f (x) $
+$ E_p = m g * h $
+$ E_k = (m v²) / 2 $
+
+où h est la hauteur du point x, W est le travail effectué jusqu'au point x et v est la vitesse au point x. En utilisant ces formules, on peut calculer la vitesse de la personne à tout moment x de la manière suivante:
+
+$ v = sqrt(2g(h(0) - h(x) - W(x))) $
+
+Cela est utile afin de déterminer la valeur finale de $mu$, Plusieurs $mu$ possibles sont testés et celui qui minimise l'erreur par rapport à la vitesse finale souhaitée est sélectionné (entre 20 et 25 $frac(k m, h)$). Pour atteindre cela, 22,5 $frac(k m, h)$ est visé et on vérifie que les valeurs minimales et maximales de vitesse arrivent dans les paramètres souhaités. La valeur finale trouvée est:
+
+$ mu = 0.62 $
+
+grâce à une ouverture de la valve de 33,1915%. Cela donne la vitesse finale de: 22.5511 $(k m)/h$ avec les vitesses maximales et minimales étants: 24.9647 $(k m)/h$ et 19.846 $(k m)/h$
 
 == Design de la minuterie de la trappe
 
@@ -47,13 +103,13 @@ $t_"G1" + 0.02 < Delta t_m < t_"G2" - 0.02$
 
 === Résultats obtenus
 
-G1 (e=0) : Vitesse après impact = 13.5455 m/s
+G1 (e=0) : Vitesse après impact = 5.6038 m/s
 
-G1 (e=0) : Temps pour quitter   = 0.2215 s
+G1 (e=0) : Temps pour quitter   = 0.5353 s
 
-G2 (e=0.8) : Vitesse après impact = 12.3818 m/s
+G2 (e=0.8) : Vitesse après impact = 5.0755 m/s
 
-G2 (e=0.8) : Temps pour quitter   = 0.2423 s
+G2 (e=0.8) : Temps pour quitter   = 0.5911 s
 
 
 == Design du coussin de trampoline

@@ -2,7 +2,6 @@
 clc;
 close all;
 clear all;
-pkg load signal;
 
 nbPlots = 8;
 nbPoints = 30;
@@ -34,7 +33,7 @@ for i = 0:nbPlots
   p(i + 1, :) = polyfit(listX, listY, polynomeDegree);
 endfor
 
-disp("finished calculating polynomials");
+% disp("finished calculating polynomials");
 
 
 xPoints = linspace(0, 25, nbPoints);
@@ -65,8 +64,26 @@ for i = 1:(nbPlots + 1)
     plot(xPoints, height);
 endfor
 
-disp("finished calculating curves");
-disp("finished calculating derived curves");
+% disp("finished calculating curves");
+% disp("finished calculating derived curves");
+
+% disp("finding best curve");
+last_angles = angles(end, :);
+bestAngle = 1;
+% disp(length(last_angles));
+for i = 1:length(last_angles);
+  % disp(last_angles(i)); disp(last_angles(bestAngle));
+  if abs(last_angles(i)) < abs(last_angles(bestAngle));
+    bestAngle = i;
+  endif
+endfor
+
+chosenTrajectoire = bestAngle;
+
+% disp("finished finding best curve");
+disp(["Best end height is: ", num2str(trajectoires(end, chosenTrajectoire)), "m"])
+p_str = sprintf('%g ', p(chosenTrajectoire, :));
+disp(["Best Trajectory polynomials are: ", p_str])
 
 % friction time
 
@@ -87,21 +104,20 @@ plot(ouverture, muEmp, 'x');
 
 err = zeros(nbPlotsMu, 1);
 
-disp("finished calculating friction curve");
-disp(length(muTrajectoire));
+p_str = sprintf('%g ', pMu);
+disp(["Best mu polynomials are: ", p_str])
+
+% disp("finished calculating friction curve");
+% disp(length(muTrajectoire));
 
 %err(:, 1) = abs(muTrajectoire(1) - muEmp(1));
 for i = 1:nbPlotsMu
   err(i) = muTrajectoire((ouverture(i) / 10) + 1) - muEmp(i);
 endfor
-
-disp(length(err));
-% muErr = muErr = sqrt((1 / length(err)) * sum(err.^2));
 muErr = sqrt(mean(err.^2));
-disp(length(muErr));
 
-disp("finished finding friction's imprecision");
-disp(muErr);
+% disp("finished finding friction's imprecision");
+disp(["mu RMS is: ", num2str(muErr)]);
 
 %plot(xPoints, muTrajectoire - muErr(:));
 %plot(xPoints, muTrajectoire + muErr(:));
@@ -122,71 +138,82 @@ disp(muErr);
 %
 % v = sqrt(2g(yIni - trajectoire(x) - W(x)))
 
+% --- Vitesse (Velocity) Time ---
 figure; hold on; grid on;
-
 kmhToMs = (1000/3600);
-xValve = linspace(0, 100, nbPoints);
 xPoints = linspace(0, 25, nbPoints);
 
-x_lims = [0, xPoints(end)];
+% Safety boundaries (Visualizing limits)
+plot([0 25], [45 * kmhToMs, 45 * kmhToMs], 'r--', 'HandleVisibility', 'off');
+plot([0 25], [25 * kmhToMs, 25 * kmhToMs], 'y--', 'HandleVisibility', 'off');
+plot([0 25], [20 * kmhToMs, 20 * kmhToMs], 'y--', 'HandleVisibility', 'off');
+plot([0 25], [10 * kmhToMs, 10 * kmhToMs], 'g--', 'HandleVisibility', 'off');
 
-for j = 1:5
-  subplot(2, 3, j);
-  hold on; grid on;
-  plot(x_lims, [45 * kmhToMs, 45 * kmhToMs], 'g', 'LineWidth', 2); % Green bar
-  plot(x_lims, [15 * kmhToMs, 15 * kmhToMs], 'r', 'LineWidth', 2); % red bar
-  plot(x_lims, [10 * kmhToMs, 10 * kmhToMs], 'g', 'LineWidth', 2); % Green bar
-  % Initialize a container for legend labels
-  labels = {};
+height = trajectoires(:, chosenTrajectoire);
 
-  mu = 0.05 * j + 0.4
-    % Your target mu values from the previous loop
-  valveResult = 0;
+muTestSteps = 8;
 
-  % Get the coefficients from your polyfit (pMu = [a, b, c])
-  aMu = pMu(1);
-  bMu = pMu(2);
-  cMu = pMu(3);
+targetEndSpeed = 22.5 * kmhToMs;
+v = zeros(length(xPoints), muTestSteps);
+vMax = zeros(length(xPoints), muTestSteps);
+vMin = zeros(length(xPoints), muTestSteps);
+mu = zeros(1, muTestSteps);
+valveResult = zeros(1, muTestSteps);
 
-  coeffs = [aMu, bMu, (cMu - mu)];
-  possible_x = roots(coeffs);
+for j = 1:muTestSteps
+    mu(j) = 0.47 + 0.05 * j;
 
-  % 'roots' returns 2 values for a quadratic.
-  % We pick the one between 0 and 100.
-  valveResult = possible_x(possible_x >= 0 & possible_x <= 80);
+    % Find Valve % using quadratic formula
+    aMu = pMu(1); bMu = pMu(2); cMu = pMu(3);
+    coeffs = [aMu, bMu, (cMu - mu(j))];
+    possible_x = roots(coeffs);
+    r = possible_x(possible_x >= 0 & possible_x <= 100);
+    if isempty(r); valveResult(j) = 0; else valveResult(j) = r(1); end
 
-  for i = 1:nbPlots
-    height = trajectoires(:, i);
-    angle = angles(:, i)';
-    friction =  cos(angle);
-    frictionMax = (mu + muErr) * g * cos(angle);
-    frictionMin = (mu - muErr) * g * cos(angle);
+    % We calculate Work per unit mass (W/m)
+    friction_per_unit_x = mu(j) * g;
+    friction_per_unit_x_Max = (mu(j) + muErr) * g;
+    friction_per_unit_x_Min = (mu(j) - muErr) * g;
+    W_over_m = cumtrapz(xPoints, ones(size(xPoints)) * friction_per_unit_x);
+    W_over_m_Max = cumtrapz(xPoints, ones(size(xPoints)) * friction_per_unit_x_Max);
+    W_over_m_Min = cumtrapz(xPoints, ones(size(xPoints)) * friction_per_unit_x_Min);
 
-    W = cumtrapz(xPoints(:), friction(:));
-    WMax = cumtrapz(frictionMax(:), xPoints(:));
-    WMin = cumtrapz(frictionMin(:), xPoints(:));
+    % Energy Balance: 0.5 * v^2 = g * (yIni - y) - (Work_lost / m)
+    specific_energy = (g * (yIni - height)) - W_over_m';
+    specific_energy_Max = (g * (yIni - height)) - W_over_m_Max';
+    specific_energy_Min = (g * (yIni - height)) - W_over_m_Min';
 
-    % 3. Energy Balance: v = sqrt( 2 * (G_potential_loss - Work_loss) )
-    % Height loss is (yIni - height)
-    energy_balance = (g * (yIni - height(:))) - (mu * g .* W(:));
+    specific_energy(specific_energy < 0) = 0; % 0 wrong values to stop crashes
+    v(:, j) = sqrt(2 * specific_energy);
+    vMax(:, j) = sqrt(2 * specific_energy_Max);
+    vMin(:, j) = sqrt(2 * specific_energy_Min);
+end
 
-    % Ensure we don't take the square root of a negative (if friction stops the person)
-    energy_balance(energy_balance < 0) = 0;
 
-    v = sqrt(2 * energy_balance);
-
-    plot(xPoints, v);
-  %  plot(xPoints, vMin .* msToKmh);
-  %  plot(xPoints, vMax .* msToKmh);
-    axis([0 25 0 15]);
-    labels{i} = [ 'Ey = ', num2str(height(end), '%.1f'), 'm' ];
-  endfor
-  legend(labels, 'location', 'northeastoutside', 'FontSize', 8);
-  title({['mu (+/- ', num2str(muErr),')= ', num2str(mu)], ['valve (%) = ', num2str(valveResult)]});
-  xlabel('position (m)'); ylabel('vitesse (m/s)');
+% disp("finding best curve");
+last_speeds = v(end, :);
+bestEndSpeed = 1;
+% disp(length(last_speeds));
+for i = 1:length(last_speeds);
+  % disp([num2str(abs(last_speeds(i) - (22.5*kmhToMs))), "<" , num2str(abs(last_speeds(bestEndSpeed) - (22.5*kmhToMs)))]);
+  if abs(last_speeds(i) - (22.5*kmhToMs)) < abs(last_speeds(bestEndSpeed) - (22.5*kmhToMs));
+    bestEndSpeed = i;
+  endif
 endfor
 
-axis auto;
+plot(xPoints, v(:, bestEndSpeed), 'DisplayName', sprintf('\\mu=%.2f, Valve=%.1f%%', mu(bestEndSpeed), valveResult));
+plot(xPoints, vMax(:, bestEndSpeed), 'DisplayName', sprintf('\\mu=%.2f, Valve=%.1f%%', mu(bestEndSpeed), valveResult));
+plot(xPoints, vMin(:, bestEndSpeed), 'DisplayName', sprintf('\\mu=%.2f, Valve=%.1f%%', mu(bestEndSpeed), valveResult));
 
+disp(["Best end speed is: ", num2str(v(end, bestEndSpeed)), "m/s"])
+disp(["Best end speed is: ", num2str(v(end, bestEndSpeed) * 1/kmhToMs), "km/h"])
+disp(["Best max end speed is: ", num2str(vMax(end, bestEndSpeed) * 1/kmhToMs), "km/h"])
+disp(["Best min end speed is: ", num2str(vMin(end, bestEndSpeed) * 1/kmhToMs), "km/h"])
+disp(["Best friction coefficient is: ", num2str(mu(bestEndSpeed))])
+disp(["Best valve opening is: ", num2str(valveResult(bestEndSpeed)), "%"])
 
-
+legend('location', 'northeastoutside');
+title('Velocity Evolution along Trajectory');
+xlabel('Horizontal Distance (m)');
+ylabel('Velocity (m/s)');
+axis([0 26 0 46]);

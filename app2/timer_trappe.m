@@ -5,7 +5,7 @@ clear all;
 close all;
 clc;
 
-v_participant = 15.0;
+v_participant = 6.2642;
 
 m_participant = 80;
 v_ballon = -1.0;
@@ -93,8 +93,9 @@ fill([0, t_traversee_G2, t_traversee_G2, 0], [0.1, 0.1, 0.4, 0.4], 'b', 'FaceAlp
 text(t_traversee_G2/2, 0.25, 'Sur trappe (G2)', 'HorizontalAlignment', 'center');
 
 % Limites
-xline(t_min, 'r-', 'Min (G1 safe)');
-xline(t_max, 'b-', 'Max (G2 safe)');
+yl = ylim();
+line([t_min, t_min], yl, 'Color', 'r', 'DisplayName', 'Min (G1 safe)');
+line([t_max, t_max], yl, 'Color', 'b', 'DisplayName', 'Max (G2 safe)');
 
 if t_min < t_max
     fill([t_min, t_max, t_max, t_min], [0, 1, 1, 0], 'g', 'FaceAlpha', 0.2, 'EdgeColor', 'none');
