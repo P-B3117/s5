@@ -71,3 +71,44 @@ $Delta z_"bassin" = frac(m, 2 b) ln! frac(v_0 - v_e, (f_"fin"-1) v_e)$
 Vitesse initiale à l'entrée dans l'eau v_initiale = 14.0071 m/s
 Vitesse limite dans l'eau v_equilibre = 0.91373 m/s
 Profondeur sécuritaire du bassin Δz = 4.6244 m
+
+== Design de la minuterie de la trappe
+
+Le fonctionnement de la trappe dépend de la collision entre le participant et le "ballon-mouse". L'objectif est de déterminer le temps d'ouverture de la trappe ($Delta t_m$) pour discriminer les cas où le ballon est attrapé (G1) ou rebondit (G2).
+
+=== Modélisation de la collision
+
+On considère une collision unidimensionnelle parfaitement alignée.
+
+1. Conservation de la quantité de mouvement :
+  $m_p v_p + m_b v_b = m_p v'_p + m_b v'_b$
+
+2. Coefficient de restitution ($e$) :
+  $e = - frac(v'_b - v'_p, v_b - v_p)$
+
+En isolant $v'_b$ dans l'équation de restitution ($v'_b = v'_p + e(v_p - v_b)$) et en substituant dans l'équation de la quantité de mouvement, on trouve la vitesse du participant après l'impact $v'_p$ :
+
+$v'_p = frac(m_p v_p + m_b v_b - m_b e (v_p - v_b), m_p + m_b)$
+
+=== Critères de la minuterie
+
+La trappe de longueur $L_T$ s'ouvre après un délai $Delta t_m$.
+
+- Cas G1 (Ballon attrapé, $e=0$) : Le participant doit avoir *quitté* la trappe avant l'ouverture.
+  $Delta t_m > t_"G1" + text("marge") quad "avec" quad t_"G1" = L_T / v'_p(e=0)$
+
+- Cas G2 (Rebond, $e=0.8$) : Le participant doit être *encore sur* la trappe lors de l'ouverture.
+  $Delta t_m < t_"G2" - text("marge") quad "avec" quad t_"G2" = L_T / v'_p(e=0.8)$
+
+Une solution viable existe si :
+$t_"G1" + 0.02 < Delta t_m < t_"G2" - 0.02$
+
+=== Résultats obtenus
+
+G1 (e=0) : Vitesse après impact = 13.5455 m/s
+
+G1 (e=0) : Temps pour quitter   = 0.2215 s
+
+G2 (e=0.8) : Vitesse après impact = 12.3818 m/s
+
+G2 (e=0.8) : Temps pour quitter   = 0.2423 s
