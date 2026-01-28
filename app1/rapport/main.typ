@@ -335,7 +335,7 @@ $
 
 - comme $alpha_{A B} = 5$ :
 $
-C_B = I alpha_AB - C_{A B} - C_A
+C_B = I alpha_{A B} - C_{A B} - C_A
 $
 
 Ce résultat utilise les couples $C_{A B}$ et $C_A$ calculés dans la section statique, car la force gravitationnelle exerce encore son effet de levier.
@@ -350,5 +350,3 @@ Ce résultat utilise les couples $C_{A B}$ et $C_A$ calculés dans la section st
 == Analyse des courbes obtenues avec MATLAB
 
 [Insert relevant text]
-
-
