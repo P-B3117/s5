@@ -1,0 +1,41 @@
+name: Build Typst Documents
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+    workflow_dispatch:
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Setup Typst
+              uses: typst-community/setup-typst@v3
+              with:
+                  typst-version: "latest"
+
+            - name: Build all Typst documents
+              run: |
+                  find . -name "main.typ" -type f | while read -r file; do
+                    dir=$(dirname "$file")
+                    parent_dir=$(basename "$(dirname "$dir")")
+                    current_dir=$(basename "$dir")
+                    output_name="${parent_dir}-${current_dir}.pdf"
+                    
+                    echo "Building: $file -> $dir/$output_name"
+                    cd "$dir"
+                    typst compile main.typ "$output_name"
+                    cd - > /dev/null
+                  done
+
+            - name: Upload artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                  name: typst-documents
+                  path: "**/*.pdf"
