@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import numpy.fft as fft
+from numpy.fft import fft, fftshift
 
 plt.ion()  # Turn on interactive mode
 
@@ -39,8 +39,8 @@ plt.xlabel("Time")
 plt.ylabel("Amplitude")
 plt.grid(True)  # good ol grid on
 
-fft_result = fft.fftshift(fft.fft(signal))
-han_result = fft.fftshift(fft.fft(signal * np.hanning(len(signal))))
+fft_result = fftshift(fft(signal))
+han_result = fftshift(fft(signal * np.hanning(len(signal))))
 
 span = 2 * np.pi
 xpoints = np.linspace(-span / 2, span / 2, len(fft_result))
