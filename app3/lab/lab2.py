@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from numpy.fft import fft, fftshift
-from scipy.signal import freqz, lfilter
+from scipy.signal import freqz
 
 plt.ion()  # Turn on interactive mode
 

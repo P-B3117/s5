@@ -1,2 +1,4 @@
 octave-workspace
 .venv/
+__pycache__/
+*.pyc
