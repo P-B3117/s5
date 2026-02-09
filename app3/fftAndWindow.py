@@ -44,26 +44,69 @@ def plot_fft(
     plt.grid(True)  # good ol grid on
 
 
-if __name__ == "__main__":
-    from wavLoader import load_basson, load_guitare
+def test():
+    from wavLoader import load_guitare
 
-    print("Plotting fft and magnitude of sounds using a Hamming window:")
-    print()
-    sample_rate, data = load_guitare()
-    print(" - plotting for Guitar")
-    xpoints, fft_filter = apply_fft(data)
-    plot_fft(xpoints, fft_filter, title="FFT Guitar")
-    plot_fft(
-        *apply_fft_magnitude(xpoints=xpoints, fft_filter=fft_filter),
-        title="Magnitude Guitar",
-    )
-    print()
-    print(" - plotting for Bassoon")
-    sample_rate, data = load_basson()
-    xpoints, fft_filter = apply_fft(data)
-    plot_fft(xpoints, fft_filter, title="FFT Bassoon")
-    plot_fft(
-        *apply_fft_magnitude(xpoints=xpoints, fft_filter=fft_filter),
-        title="Magnitude Bassoon",
-    )
+    fs, signal = load_guitare()
+    N = len(signal)
+    t = np.linspace(0, N / fs, N)
+
+    # 3. Apply Windowing (Hann)
+    window = hamming(N)
+    windowed_signal = signal * window
+
+    # 4. Perform Real FFT
+    fft_out = np.fft.rfft(windowed_signal)
+    freqs = np.fft.rfftfreq(N, d=1 / fs)
+    mags = np.abs(fft_out)  # Calculate Magnitude
+
+    # 5. Plotting
+    plt.figure(figsize=(12, 6))
+
+    # Plot the Time Domain (The Waveform)
+    plt.subplot(2, 1, 1)
+    plt.plot(t, signal, label="Original Signal", alpha=0.5)
+    plt.plot(t, windowed_signal, label="Windowed Signal", color="red")
+    plt.title("Time Domain: Signal before and after Windowing")
+    plt.xlabel("Time [s]")
+    plt.ylabel("Amplitude")
+    plt.legend()
+    plt.grid(True)
+
+    # Plot the Frequency Domain (The Spectrum)
+    plt.subplot(2, 1, 2)
+    plt.plot(freqs, mags, color="blue")
+    plt.title("Frequency Domain: FFT Result")
+    plt.xlabel("Frequency [Hz]")
+    plt.ylabel("Magnitude")
+    plt.xlim(0, 2000)  # Zoom in to the relevant part of the spectrum
+    plt.grid(True)
+
+    plt.tight_layout()
+
+
+if __name__ == "__main__":
+    # from wavLoader import load_basson, load_guitare
+
+    # print("Plotting fft and magnitude of sounds using a Hamming window:")
+    # print()
+    # sample_rate, data = load_guitare()
+    # print(" - plotting for Guitar")
+    # xpoints, fft_filter = apply_fft(data)
+    # plot_fft(xpoints, fft_filter, title="FFT Guitar")
+    # plot_fft(
+    #     *apply_fft_magnitude(xpoints=xpoints, fft_filter=fft_filter),
+    #     title="Magnitude Guitar",
+    # )
+    # print()
+    # print(" - plotting for Bassoon")
+    # sample_rate, data = load_basson()
+    # xpoints, fft_filter = apply_fft(data)
+    # plot_fft(xpoints, fft_filter, title="FFT Bassoon")
+    # plot_fft(
+    #     *apply_fft_magnitude(xpoints=xpoints, fft_filter=fft_filter),
+    #     title="Magnitude Bassoon",
+    # )
+    #
+    test()
     plt.show()
