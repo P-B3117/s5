@@ -2,6 +2,10 @@ import numpy as np
 import scipy.io.wavfile as wavfile
 
 
+def save_wav(file_path, sample_rate: int, data: np.ndarray) -> None:
+    wavfile.write(file_path, sample_rate, np.int16(data / np.max(np.abs(data)) * 32767))
+
+
 def load_wav(file_path) -> tuple[int, np.ndarray]:
     sample_rate, data = wavfile.read(file_path)
     return sample_rate, data
@@ -16,12 +20,10 @@ def load_basson() -> tuple[int, np.ndarray]:
 
 
 if __name__ == "__main__":
-    print("Running wavLoader functions:")
-    print()
     sample_rate, data = load_guitare()
-    print(f" - Guitar Sample rate: {sample_rate} Hz")
-    print(f" - Guitar Data size: {len(data)}")
+    print(f" - Guitare Sample rate: {sample_rate} Hz")
+    print(f" - Guitare Data size: {len(data)}")
     print()
     sample_rate, data = load_basson()
-    print(f" - Bassoon Sample rate: {sample_rate} Hz")
-    print(f" - Bassoon Data size: {len(data)}")
+    print(f" - Basson Sample rate: {sample_rate} Hz")
+    print(f" - Basson Data size: {len(data)}")
