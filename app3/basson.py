@@ -41,6 +41,7 @@ if __name__ == "__main__":
 
     filtered = lfilter(h, 1, basson)
     filtered = lfilter(h, 1, filtered)
+    filtered = lfilter(h, 1, filtered)
 
     # FFT
     freqs = rfftfreq(len(basson), d=1 / FE)
