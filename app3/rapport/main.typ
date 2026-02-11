@@ -92,4 +92,4 @@ La @fig-spectres compare les spectres d'amplitude du signal de basson avant et a
 
 = Conclusion
 
-TODO: 5 lignes sur bilan des performances et autoévaluation?
+Les performances des filtres et de la synthèse utilisée étaient satisfaisantes pour la problématique, mais la synthèse aurait vraiment pu sonner plus naturelle si on avait utilisées 100 harmoniques ou plus plutôt que 32. De plus, certains calculs auraient pu être optimisés pour améliorer les performances du système, mais cela ne faisait pas l'objet de cette problématique.
