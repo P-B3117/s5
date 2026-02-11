@@ -116,6 +116,9 @@ if __name__ == "__main__":
     ax4b.grid(True, alpha=0.3, which="both")
     fig4.tight_layout()
     fig4.savefig("rapport/fig_spectres_basson.svg")
+    ax4b.set_title("Spectre de fourrier — Basson filtré (coupe-bande 1 kHz)")
+    ax4a.set_title("Spectre de fourrier — Basson original")
+    fig4.savefig("rapport/fft-basson-avant-apres.svg")
 
     plt.show()
 

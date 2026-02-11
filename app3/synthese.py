@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy.signal as signal
 from scipy.fft import rfft, rfftfreq
+
 from sounds import load_guitare, save_wav
 
 K = 32
@@ -101,20 +102,23 @@ if __name__ == "__main__":
     x_fft = np.abs(rfft(x))
     x_syn_fft = np.abs(rfft(x_syn))
 
-    plt.figure()
+    fig = plt.figure()
     plt.subplot(2, 1, 1)
-    plt.plot(freqs_range, x_fft)
-    plt.title("Note de guitare originale")
+    plt.plot(freqs_range, 20 * np.log10(np.abs(x_fft)))
+    plt.title("Spectre de fourrier - note de guitare originale")
     plt.xlabel("Fréquence (Hz)")
     plt.ylabel("Amplitude")
 
     plt.subplot(2, 1, 2)
-    plt.plot(freqs_range, x_syn_fft)
-    plt.title("Note de guitare synthétisée")
+    plt.plot(freqs_range, 20 * np.log10(np.abs(x_syn_fft)), color="tab:orange")
+    plt.title("Spectre de fourrier - note de guitare synthétisée")
     plt.xlabel("Fréquence (Hz)")
     plt.ylabel("Amplitude")
 
     plt.tight_layout()
+
+    fig.savefig("rapport/fft-guitare-avant-apres.svg")
+
     plt.show()
 
     save_wav("synthetic_note_guitare.wav", Fe, x_syn)

@@ -77,24 +77,28 @@ if __name__ == "__main__":
     sampling_rate, sig = load_guitare()
     env = enveloppe(sampling_rate, sig)
 
-    plt.figure()
-    plt.stem(env)
+    fig = plt.figure()
+    plt.plot(env)
     plt.title("Envelope guitare")
     plt.xlabel("Time")
     plt.ylabel("Amplitude")
     # plt.xlim(-span / 2, span / 2)
     plt.grid(True)  # good ol grid on
 
+    fig.savefig("rapport/enveloppe-guitare.svg")
+
     sampling_rate, sig = load_basson()
     env = enveloppe(sampling_rate, sig)
 
-    plt.figure()
-    plt.stem(env)
+    fig = plt.figure()
+    plt.plot(env)
     plt.title("Envelope basson")
     plt.xlabel("Time")
     plt.ylabel("Amplitude")
     # plt.xlim(-span / 2, span / 2)
     plt.grid(True)  # good ol grid on
+
+    fig.savefig("rapport/enveloppe-basson.svg")
 
     print("done")
     plt.show()

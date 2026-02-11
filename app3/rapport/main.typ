@@ -39,6 +39,16 @@ Pour générer le signal de la note, il faut faire une somme de cosinus pondér�
 
 TODO: affichage spectres de fourier guitare et basson. originaux et apres synthese. dB/Hz
 
+#figure(
+  image("fft-basson-avant-apres.svg",  height: 40%),
+  caption: [Spectre de fourrier du basson avant et après synthèse],
+) <fig-fft-basson>
+
+#figure(
+  image("fft-guitare-avant-apres.svg", height: 50%),
+  caption: [Spectre de fourrier de la guitare avant synthèse],
+) <fig-fft-guitare>
+
 TODO: tableau des 3 parametres pour synthétisation
 
 
