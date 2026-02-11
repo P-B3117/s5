@@ -109,6 +109,8 @@ Le <tab-harmoniques> présente les fréquences, amplitudes et phases des 32 harm
   caption: [Fréquences, amplitudes et phases des 32 harmoniques retenues],
 ) <tab-harmoniques>
 
+#pagebreak()
+
 == Enveloppe temporelle
 
 #figure(
@@ -125,15 +127,18 @@ Les enveloppes temporelles (@fig-env-basson, @fig-env-guitare) démontrent l'amp
 
 = Filtre RIF et enveloppe
 
-TODO: calculs et expliquer la longuer N du filtre
-
 Pour calculer l'ordre du filtre, on donne un ordre à un filtre passe-bas du même style que vus en classe, puis si l'ordre du filtre ne nous permets pas d'atteindre l'atténuation visée de -3Db à la fréquence de $frac(pi, 1000)$ , on recommence avec un ordre plus élevé, dans une boucle qui augmente l'ordre à chaque fois.
 
 le filtre passe-bas est définit par la fonction suivante lorsque N représente l'ordre du filtre:
 
-$h = (1 / (N)) * abs(sin((N) * frac(pi, 1000) / 2) / sin(frac(pi, 1000) / 2))$
+$ h = (1 / (N)) * abs(sin((N) * frac(pi, 1000) / 2) / sin(frac(pi, 1000) / 2)) $
 
-TODO: graphique de la réponse en fréquence du filtre
+#figure(
+  image("reponse-frequence-filtre-enveloppe.svg", height: 35%),
+  caption: [réponse en fréquence du filtre passe-bas du calcul de l'enveloppe],
+) <fig-filtre-enveloppe>
+
+La figure en @fig-filtre-enveloppe montre la réponse en fréquence du filtre passe-bas utilisé pour calculer l'enveloppe temporelle du signal de guitare. Le filtre passe-bas utilisé est du type d'une moyenne mobile, impliquant la convolution de cette réponse impulsionnelle avec le signal d'entrée.
 
 = Filtre RIF coupe-bande
 
@@ -171,22 +176,22 @@ La @fig-freq illustre la réponse en fréquence du filtre. Le graphique d'amplit
 La @fig-spectres compare les spectres d'amplitude du signal de basson avant et après filtrage. On constate la disparition de la composante parasite à 1000 Hz dans le signal filtré, alors que le reste du contenu spectral du basson est préservé. On voit aussi une grande quantité de bruit de 0 à 2000Hz, dû à l'effet du filtre.
 
 #figure(
-  image("fig_hn.svg"),
+  image("fig_hn.svg", height: 30%),
   caption: [Réponse impulsionnelle $h(n)$ du filtre coupe-bande],
 ) <fig-hn>
 
 #figure(
-  image("fig_reponse_1000hz.svg"),
+  image("fig_reponse_1000hz.svg", height: 30%),
   caption: [Réponse du filtre à un signal sinusoïdal de 1000 Hz],
 ) <fig-1000hz>
 
 #figure(
-  image("fig_amplitude_phase.svg"),
+  image("fig_amplitude_phase.svg", height: 30%),
   caption: [Amplitude et phase de la réponse en fréquence du filtre coupe-bande],
 ) <fig-freq>
 
 #figure(
-  image("fig_spectres_basson.svg"),
+  image("fig_spectres_basson.svg", height: 30%),
   caption: [Spectres d'amplitude du signal de basson avant et après filtrage coupe-bande],
 ) <fig-spectres>
 
