@@ -37,6 +37,8 @@ Pour générer le signal de la note, il faut faire une somme de cosinus pondér�
 
 = Analyse
 
+== Spectres des signaux
+
 TODO: affichage spectres de fourier guitare et basson. originaux et apres synthese. dB/Hz
 
 #figure(
@@ -49,8 +51,75 @@ TODO: affichage spectres de fourier guitare et basson. originaux et apres synthe
   caption: [Spectre de fourrier de la guitare avant synthèse],
 ) <fig-fft-guitare>
 
-TODO: tableau des 3 parametres pour synthétisation
+#figure(
+  image("fft-basson-avant-apres.svg",  height: 40%),
+  caption: [Spectre de fourrier du basson avant et après synthèse],
+) <fig-fft-basson>
 
+#figure(
+  image("fft-guitare-avant-apres.svg", height: 50%),
+  caption: [Spectre de fourrier de la guitare avant synthèse],
+) <fig-fft-guitare>
+
+== Harmoniques extraites
+
+Le <tab-harmoniques> présente les fréquences, amplitudes et phases des 32 harmoniques les plus significatives extraites du signal de guitare. On remarque que les fréquences sont approximativement des multiples entiers de la fondamentale (466.08 Hz), ce qui est caractéristique d'un son musical harmonique. Le bruit du signal provient probablement du fait que l'enregistrement ne commence pas avec la note déjà en train de sonner, ce qui affecte notre résultat de fft (discontinuité du signal).
+
+#figure(
+  columns(2, gutter: 8pt)[
+    #table(
+      columns: (auto, auto, auto, auto),
+      inset: 10pt,
+      align: horizon,
+      table.header([*$k$*], [*$F_k$*], [*$A_k$*], [*$phi_k$*]),
+      [*1*], [466.08], [713.04], [-2.11],
+      [*2*], [465.25], [639.08], [2.61],
+      [*3*], [932.44], [269.34], [-0.60],
+      [*4*], [931.61], [103.50], [0.64],
+      [*5*], [462.77], [62.19], [0.64],
+      [*6*], [2332.06], [58.21], [0.30],
+      [*7*], [1865.43], [48.61], [1.01],
+      [*8*], [1399.35], [35.31], [-1.62],
+      [*9*], [933.82], [33.45], [0.81],
+      [*10*], [463.88], [21.72], [-1.69],
+      [*11*], [414.26], [20.61], [-2.63],
+      [*12*], [2799.25], [17.59], [-1.80],
+      [*13*], [230.97], [15.81], [-2.71],
+      [*14*], [468.56], [15.29], [2.19],
+      [*15*], [277.00], [12.41], [2.49],
+      [*16*], [155.18], [9.62], [2.45],
+    )
+
+    #colbreak()
+
+    #table(
+      columns: (auto, auto, auto, auto),
+      inset: 10pt,
+      align: horizon,
+      table.header([*$k$*], [*$F_k$*], [*$A_k$*], [*$phi_k$*]),
+
+      [*17*], [469.67], [9.47], [0.96],
+      [*18*], [461.67], [7.40], [0.26],
+      [*19*], [206.99], [7.34], [2.31],
+      [*20*], [470.49], [7.29], [0.21],
+      [*21*], [621.53], [7.21], [1.49],
+      [*22*], [1397.42], [6.82], [1.56],
+      [*23*], [115.49], [6.40], [1.63],
+      [*24*], [2329.31], [6.26], [-2.17],
+      [*25*], [3733.89], [6.01], [-1.36],
+      [*26*], [4201.90], [5.94], [1.28],
+      [*27*], [1863.23], [5.08], [-1.96],
+      [*28*], [471.87], [4.89], [-1.45],
+      [*29*], [471.32], [4.81], [-0.67],
+      [*30*], [936.30], [4.66], [-0.64],
+      [*31*], [929.13], [4.28], [-1.81],
+      [*32*], [472.42], [4.20], [-1.90],
+    )
+  ],
+  caption: [Fréquences, amplitudes et phases des 32 harmoniques retenues],
+) <tab-harmoniques>
+
+== Enveloppe temporelle
 
 #figure(
   image("enveloppe-basson.svg",  height: 50%),
