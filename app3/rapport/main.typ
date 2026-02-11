@@ -13,7 +13,7 @@
 
 = Introduction
 
-TODO: gurt
+Le présent rapport présente les résultats obtenus lors de l'analyse et de la synthèse d'un signal musical. Des filtres coupes bandes et passes bas RIF à coefficients égaux ont été utilisés pour extraire les paramètres du signal conformément au demandes.
 
 = Schémas bloc
 
