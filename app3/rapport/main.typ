@@ -27,8 +27,6 @@ TODO: affichage spectres de fourier guitare et basson. originaux et apres synthe
 
 TODO: tableau des 3 parametres pour synthétisation
 
-TODO: Graphique desenveloppes temporelles
-
 
 #figure(
   image("enveloppe-basson.svg",  height: 50%),
