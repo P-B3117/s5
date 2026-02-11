@@ -19,7 +19,21 @@ Le présent rapport présente les résultats obtenus lors de l'analyse et de la 
 
 == Extraction des paramètres
 
+Le signal de la note de guitare d'entrée est traité de deux façons. La première applique une fenêtre de Hanning puis une FFT pour extraire les $K = 32$ harmoniques dominantes (fréquences $f_k$, amplitudes $A_k$, phases $phi_k$). La seconde prend la valeur absolue du signal puis le filtre avec un filtre RIF passe-bas pour obtenir l'enveloppe temporelle normalisée.
+
+#figure(
+  image("fig_schema_extraction.svg"),
+  caption: [Schéma bloc de l'extraction des paramètres],
+)
+
 == Synthèse du signal
+
+Pour générer le signal de la note, il faut faire une somme de cosinus pondérés avec les 3 composants extraits, puis multiplier le résultat par l'enveloppe temporelle pour reproduire l'attaque et la décroissance de la note originale. Les fréquences extraites sont optionnellement décalées pour produire différentes notes.
+
+#figure(
+  image("fig_schema_synthese.svg"),
+  caption: [Schéma bloc de la synthèse du signal],
+)
 
 = Analyse
 
