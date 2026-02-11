@@ -35,17 +35,60 @@ TODO: calculs et expliquer la longuer N du filtre
 
 TODO: graphique de la réponse en fréquence du filtre
 
-= Filtre coupe-bande
+= Filtre RIF coupe-bande
 
-TODO: équations
+== Équations
 
-TODO: graphique h(n)
+L'équation aux différences d'un filtre RIF d'ordre $N - 1$ est:
+$ y(n) = sum_(k=0)^(N-1) h(k) dot x(n - k) $
 
-TODO Graphique de la réponse à 1000hz
+La réponse impulsionnelle du filtre coupe-bande est construite à partir de la réponse impulsionnelle d'un filtre passe-bas. Le filtre passe-bas $h_("PB")$ de longueur $N$ centré sur la fréquence de coupure $f_c$ est défini par:
+$
+  h_("PB") (n) = cases(
+    K / N & "si" n = 0,
+    sin(K pi n \/ N) / (pi n \/ N dot N) & "si" n eq.not 0
+  )
+  "avec" K = 2 N f_c / F_e + 1
+$
 
-TODO: Graphique amplitude et phase de la réponse
+Le filtre coupe-bande est ensuite obtenu par modulation:
+$ h_("CB") (n) = delta(n) - 2 dot h_("PB") (n) dot cos(omega_0 n) "avec" omega_0 = 2 pi f_c / F_e $
 
-TODO: Grahpique spectres d'amplitude des signaux basson avant et après filtrage
+Les valeurs numériques des coefficients sont calculées avec $N = 6000$, $f_c = 1000$ Hz et $F_e = 44100$ Hz:
+$ K = (2 times 6000 times 1000) / 44100 + 1 approx 273 $
+$ omega_0 = (2 pi times 1000) / 44100 approx 0.1425 "rad/éch" $
+
+Le filtrage est appliqué trois fois en cascade afin d'augmenter l'atténuation à la fréquence coupée.
+
+== Graphiques et résultats
+
+La @fig-hn présente la réponse impulsionnelle $h(n)$ du filtre coupe-bande. On observe une forme oscillante centrée autour de $n = 0$ dont l'amplitude décroit progressivement. La longueur du filtre ($N = 6000$ échantillons) détermine la sélectivité fréquentielle: plus $N$ est grand, plus la bande rejetée est étroite.
+
+La @fig-1000hz montre l'effet du filtre sur une sinusoïde pure à 1000 Hz (exactement la fréquence à rejeter). Le signal d'entrée a une amplitude constante, alors que le signal de sortie est fortement atténué une fois le régime transitoire passé, confirmant le bon fonctionnement du filtre à cette fréquence.
+
+La @fig-freq illustre la réponse en fréquence du filtre. Le graphique d'amplitude montre une atténuation marquée autour de 1000 Hz (creux étroit), tandis que les autres fréquences sont transmises sans modification significative (gain de 0 dB). Le graphique de phase montre la phase déroulée, qui reste linéaire en dehors de la bande rejetée, caractéristique d'un filtre RIF à phase linéaire.
+
+La @fig-spectres compare les spectres d'amplitude du signal de basson avant et après filtrage. On constate la disparition de la composante parasite à 1000 Hz dans le signal filtré, alors que le reste du contenu spectral du basson est préservé. On voit aussi une grande quantité de bruit de 0 à 2000Hz, dû à l'effet du filtre.
+
+#figure(
+  image("fig_hn.svg"),
+  caption: [Réponse impulsionnelle $h(n)$ du filtre coupe-bande],
+) <fig-hn>
+
+#figure(
+  image("fig_reponse_1000hz.svg"),
+  caption: [Réponse du filtre à un signal sinusoïdal de 1000 Hz],
+) <fig-1000hz>
+
+#figure(
+  image("fig_amplitude_phase.svg"),
+  caption: [Amplitude et phase de la réponse en fréquence du filtre coupe-bande],
+) <fig-freq>
+
+#figure(
+  image("fig_spectres_basson.svg"),
+  caption: [Spectres d'amplitude du signal de basson avant et après filtrage coupe-bande],
+) <fig-spectres>
 
 = Conclusion
 
