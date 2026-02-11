@@ -3,6 +3,8 @@ import numpy as np
 from numpy.fft import rfft
 from scipy.signal.windows import hamming
 
+from sounds import load_basson
+
 low_pass_test_freq = np.pi / 1000
 low_pass_test_gain_decibel = -3
 low_pass_test_gain_linear = 10 ** (low_pass_test_gain_decibel / 20)
@@ -77,7 +79,18 @@ if __name__ == "__main__":
 
     plt.figure()
     plt.stem(env)
-    plt.title("envelope")
+    plt.title("Envelope guitare")
+    plt.xlabel("Time")
+    plt.ylabel("Amplitude")
+    # plt.xlim(-span / 2, span / 2)
+    plt.grid(True)  # good ol grid on
+
+    sampling_rate, sig = load_basson()
+    env = enveloppe(sampling_rate, sig)
+
+    plt.figure()
+    plt.stem(env)
+    plt.title("Envelope basson")
     plt.xlabel("Time")
     plt.ylabel("Amplitude")
     # plt.xlim(-span / 2, span / 2)

@@ -17,12 +17,12 @@ def delta(n):
 
 
 def h_filtre_passe_bas(n, Fe):
-    w1 = 2 * np.pi * BAND / Fe  # fréquence de coupure
+    K = 2 * N * F_CUT / Fe + 1
 
-    h = np.zeros_like(n, dtype=float)
+    h = np.zeros_like(n)
 
-    h[n != 0] = np.sin(w1 * n[n != 0]) / (np.pi * n[n != 0])
-    h[n == 0] = w1 / np.pi
+    h[n != 0] = np.sin(K * np.pi * n[n != 0] / N) / (np.pi * n[n != 0] / N) / N
+    h[n == 0] = K / N
 
     return h
 
