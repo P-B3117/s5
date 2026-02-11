@@ -29,6 +29,18 @@ TODO: tableau des 3 parametres pour synthétisation
 
 TODO: Graphique desenveloppes temporelles
 
+
+#figure(
+  image("enveloppe-basson.svg",  height: 50%),
+  caption: [enveloppe temporelle du signal de basson avant filtrage coupe-bande],
+) <fig-env-basson>
+
+#figure(
+  image("enveloppe-guitare.svg", height: 50%),
+  caption: [enveloppe temporelle du signal de guitare],
+) <fig-env-guitare>
+
+
 = Filtre RIF et enveloppe
 
 TODO: calculs et expliquer la longuer N du filtre
