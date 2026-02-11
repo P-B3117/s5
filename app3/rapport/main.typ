@@ -37,8 +37,6 @@ Pour générer le signal de la note, il faut faire une somme de cosinus pondér�
 
 = Analyse
 
-TODO: affichage spectres de fourier guitare et basson. originaux et apres synthese. dB/Hz
-
 #figure(
   image("fft-basson-avant-apres.svg",  height: 40%),
   caption: [Spectre de fourrier du basson avant et après synthèse],
@@ -48,6 +46,8 @@ TODO: affichage spectres de fourier guitare et basson. originaux et apres synthe
   image("fft-guitare-avant-apres.svg", height: 50%),
   caption: [Spectre de fourrier de la guitare avant synthèse],
 ) <fig-fft-guitare>
+
+Il est observé que les spectres de fourrier (@fig-fft-basson, @fig-fft-guitare) des notes synthétisées sont similaires aux spectres de fourrier des notes originales, mais avec une amplitude plus faible lorsqu'on s'éloigne de la note originale mais la note originale est "brouillée", démontrant bien que l'on ne peut pas gagner sans perdre en filtrage numérique.
 
 TODO: tableau des 3 parametres pour synthétisation
 
@@ -62,6 +62,7 @@ TODO: tableau des 3 parametres pour synthétisation
   caption: [enveloppe temporelle du signal de guitare],
 ) <fig-env-guitare>
 
+Les enveloppes temporelles (@fig-env-basson, @fig-env-guitare) démontrent l'amplitude des notes et représentent la durée de chaque note ainsi que leurs décroissance et leurs décalage du au filtrage numérique.
 
 = Filtre RIF et enveloppe
 
