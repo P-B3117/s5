@@ -21,14 +21,15 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib import patches, rcParams
-from matplotlib.figure import Figure
+from matplotlib import patches
 
 
 def zplane(b, a, filename=None):
     """Plot the complex z-plane given a transfer function."""
 
     # get a figure/plot
+    plt.figure()
+    plt.title("Pôles et zéros")
     ax = plt.subplot(111)
 
     # create the unit circle
@@ -85,10 +86,5 @@ def zplane(b, a, filename=None):
     ticks = [-1, -0.5, 0.5, 1]
     plt.xticks(ticks)
     plt.yticks(ticks)
-
-    if filename is None:
-        plt.show()
-    else:
-        plt.savefig(filename)
 
     return z, p, k
