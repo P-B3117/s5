@@ -3,3 +3,4 @@ octave-workspace
 __pycache__/
 *.pyc
 *.pdf
+.pytest_cache/

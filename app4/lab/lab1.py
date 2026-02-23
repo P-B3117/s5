@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from numpy.fft import fft, fftshift
 from scipy import signal
+import matplotlib.image as mpimg
 
 from zplane import zplane
 
@@ -111,3 +112,22 @@ try:
     plt.show()
 except KeyboardInterrupt:
     plt.close("all")
+
+
+plt.gray()
+img = mpimg.imread("../assets/goldhill.png")
+
+
+width, height = img.shape
+
+T = np.array([[2, 0], [0, 1 / 2]])
+
+new_img = np.zeros((int(height * 0.5), int(width * 2)), dtype=img.dtype)
+
+for y in range(height):
+    for x in range(width):
+        new_x, new_y = T @ np.array([x, y])
+        new_img[int(new_y), int(new_x)] = img[y, x]
+
+
+mpimg.imsave("goldhill_transformed.png", new_img, cmap="gray")
