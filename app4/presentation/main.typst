@@ -53,8 +53,16 @@ $ H^(-1)(z) = (z (z+0.99)^2 (z-0.8)) / ((z-0.9e^(j pi/2)) (z-0.9e^(-j pi/2)) (z-
 
 == Effet du filtre
 
-#align(center)[
-  #image("goldhill_aberration_comparaison.png")
+#slide(composer: (1fr, 1fr))[
+  #align(center)[
+    Image originale
+    #image("original.png", height: 80%)
+  ]
+][
+  #align(center)[
+    Image corrigée
+    #image("corrected.png", height: 80%)
+  ]
 ]
 
 = Rotation
@@ -107,8 +115,16 @@ $ P(pi/2) = mat(0, -1; 1, 0) $
 
 == Rotation
 
-#align(center)[
-  #image("goldhill_rotate_comparaison.png")
+#slide(composer: (1fr, 1fr))[
+  #align(center)[
+    Image corrigée
+    #image("corrected.png", height: 80%)
+  ]
+][
+  #align(center)[
+    Image tournée
+    #image("rotated.png", height: 80%)
+  ]
 ]
 
 

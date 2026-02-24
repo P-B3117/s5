@@ -10,14 +10,17 @@ from rotation import change_image_base, rotation_matrix
 
 if __name__ == "__main__":
     image = load_array("image_complete.npy")
+    save_image(image, "presentation/original.png")
 
     # Correction des aberrations
     den, num = filter_Hz()
     img_corrected = signal.lfilter(num, den, image)
+    save_image(img_corrected, "presentation/corrected.png")
 
     # Rotation de l'image corrigée
     rotation = rotation_matrix(np.pi / 2)
     img_rotated = change_image_base(img_corrected, rotation)
+    save_image(img_rotated, "presentation/rotated.png")
 
     # Débruitage
     img_filtered_hand = digital_filter_by_hand(img_rotated)
