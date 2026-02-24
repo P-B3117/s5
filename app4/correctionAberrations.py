@@ -4,10 +4,11 @@
 #  Une image avec les aberrations et une image où les aberrations sont corrigées. (GIF570-C1 : 6 points)
 
 import matplotlib.pyplot as plt
-from zplane import zplane
 import numpy as np
-from numpy.fft import fft, fftshift
 from scipy import signal
+
+from assets import load_array, load_image
+from zplane import zplane
 
 
 def filter_Hz():
@@ -39,7 +40,36 @@ if __name__ == "__main__":
     plt.ylabel("Amplitude (dB)")
     plt.grid()
 
+    image = load_array("goldhill_aberrations.npy")
+    corrected = signal.lfilter(num, den, image)
+
+    plt.figure()
+    plt.imshow(corrected, cmap="gray")
+    plt.title("Image corrigée")
+    plt.axis("off")
+
     try:
         plt.show()
     except KeyboardInterrupt:
         plt.close("all")
+
+
+def test_filter():
+    """Makes sure that the filter's aberrations are as expected."""
+    image = load_image("goldhill.png")
+
+    num, den = filter_Hz()
+    aberrated = signal.lfilter(num, den, image)
+
+    np.testing.assert_array_equal(aberrated, load_array("goldhill_aberrations.npy"))
+
+
+def test_correct_aberrations():
+    """Makes sure that the image is correctly corrected."""
+    image = load_array("goldhill_aberrations.npy")
+
+    # Inversion pour obtenir le filtre inverse
+    den, num = filter_Hz()
+    corrected = signal.lfilter(num, den, image)
+
+    np.testing.assert_array_almost_equal(corrected, load_image("goldhill.png"))
