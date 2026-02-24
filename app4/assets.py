@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 import numpy as np
@@ -5,7 +7,8 @@ import numpy as np
 
 def load_image(name: str) -> np.ndarray:
     plt.gray()
-    img = mpimg.imread("assets/" + name)
+    assets_dir = Path(__file__).resolve().parent / "assets"
+    img = mpimg.imread(str(assets_dir / name))
     return img
 
 
@@ -14,4 +17,5 @@ def save_image(new_img: np.ndarray, name: str):
 
 
 def load_array(name: str) -> np.ndarray:
-    return np.load("assets/" + name)
+    assets_dir = Path(__file__).resolve().parent / "assets"
+    return np.load(str(assets_dir / name))
