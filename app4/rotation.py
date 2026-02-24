@@ -33,12 +33,12 @@ if __name__ == "__main__":
     image = load_image("goldhill_rotate.png")
     rotated = change_image_base(image, rotation)
 
-    plt.subplot(2, 1, 1)
+    plt.subplot(1, 2, 1)
     plt.title("Original Image")
     plt.imshow(image)
     plt.axis("off")
 
-    plt.subplot(2, 1, 2)
+    plt.subplot(1, 2, 2)
     plt.title("Rotated Image")
     plt.imshow(rotated)
     plt.axis("off")

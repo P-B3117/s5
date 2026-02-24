@@ -29,9 +29,88 @@
 
 #title-slide()
 
-== Outline <touying:hidden>
+== Table des matières <touying:hidden>
 
 #components.adaptive-columns(outline(title: none, indent: 1em))
+
+= Correction des aberrations
+
+== Fonction de transfert inverse
+
+On inverse simplement le nominateur et le dénominateur, car $X/X=1$.
+
+$ H^(-1)(z) = (z (z+0.99)^2 (z-0.8)) / ((z-0.9e^(j pi/2)) (z-0.9e^(-j pi/2)) (z-0.95e^(j pi/8)) (z-0.95e^(-j pi/8))) $
+
+== Stabilité du filtre
+
+#slide(composer: (1fr, 1fr))[
+  Le filtre est stable, car tous les pôles de la fonction de transfert sont plus petit que 0. ($0.9$ et $0.95$)
+][
+  #align(center)[
+    #image("poles-zeros-aberrations.png")
+  ]
+]
+
+== Effet du filtre
+
+#align(center)[
+  #image("goldhill_aberration_comparaison.png")
+]
+
+= Rotation
+
+== Code Python
+
+```python
+def change_image_base(image, matrix):
+    width, height = image.shape[:2]
+    new_image = np.zeros((height, width))
+
+    for y in range(height):
+        for x in range(width):
+            old_x = width - x - 1
+            old_y = height - y - 1
+            new = matrix @ np.array([old_x, old_y])
+            new_x = int(round(new[0]))
+            new_y = int(round(new[1]))
+            new_image[new_y, new_x] = image[old_y, old_x]
+
+    return new_image
+```
+
+== Matrice de rotation
+
+$ P(theta) = mat(cos theta, -sin theta; sin theta, cos theta) $
+$ P(pi/2) = mat(0, -1; 1, 0) $
+
+== Combinaison linéaire
+
+#slide(composer: (1fr, 1fr))[
+  #align(center)[
+    $mat(e_1, e_2) mat(cos theta, -sin theta; sin theta, cos theta) = mat(u_1, u_2)$
+
+
+    $u_1 = cos(theta) * e_1 + sin(theta) * e_2$ \
+    $u_2 = -sin(theta) * e_1 + cos(theta) * e_2$
+  ]
+][
+  #align(center)[
+    Pour la problematique:
+  
+    $theta = pi / 2$ \
+    $u_1 = e_2$ \
+    $u_2 = -e_1$
+  ]
+]
+
+
+
+== Rotation
+
+#align(center)[
+  #image("goldhill_rotate_comparaison.png")
+]
+
 
 = Débruitage
 

@@ -44,6 +44,12 @@ if __name__ == "__main__":
     corrected = signal.lfilter(num, den, image)
 
     plt.figure()
+    plt.subplot(1, 2, 1)
+    plt.imshow(image, cmap="gray")
+    plt.title("Image avec aberrations")
+    plt.axis("off")
+
+    plt.subplot(1, 2, 2)
     plt.imshow(corrected, cmap="gray")
     plt.title("Image corrigée")
     plt.axis("off")
