@@ -1,69 +1,95 @@
+from typing import Callable
+
 import numpy as np
-import pytest
-from scipy.signal import bilinear, butter, buttord
+from scipy.signal import bilinear, butter, buttord, lfilter
+
+from assets import load_array, save_image
 
 FE = 1600
 
 
 class FilterArgs:
-    def __init__(self, wp, ws, gpass, gstop, fs):
+    def __init__(self, wp, ws, gpass, gstop, fe):
+        """
+        ws and wp in Hz
+        gpass and gstop in dB
+        fe in Hz
+        """
         self.wp = wp
         self.ws = ws
         self.gpass = gpass
         self.gstop = gstop
-        self.fs = fs
+        self.fe = fe
 
 
-def butter_filter(args, fs=FE):
+def butter_filter(args):
     butter_args = buttord(
-        wp=args.wp, ws=args.ws, gpass=args.gpass, gstop=args.gstop, fs=args.fs
+        wp=args.wp, ws=args.ws, gpass=args.gpass, gstop=args.gstop, fs=args.fe
     )
-    num, den = butter(*butter_args, fs=fs)
+    num, den = butter(*butter_args, fs=args.fe)
+    return num, den
+
+
+def butter_filter_by_hand(args):
+    # h(s) = ws / (s + ws)
+
+    ws_norm = (2 * np.pi * args.wp) / args.fe
+    # gauchissement des fréquences
+    args.wp = 2 * args.fe * np.tan(ws_norm / 2)
+
+    def H(s: float) -> float:
+        return 1 / (pow((s / args.wp), 2) + ((s / args.wp) * np.sqrt(2)) + 1)
+
+    return args, H
+
+
+def bilinear_by_hand(args: FilterArgs, H_butter: Callable[[float], float]):
+
+    def s(z):
+        return (2 * args.fe) * ((z - 1) / (z + 1))
+
+    def H(z):
+        return H_butter(s(z))
+
+    return H
+
+
+def digital_filter(img: np.ndarray) -> np.ndarray:
+    butter_args = FilterArgs(500, 750, 0.2, 60, fe=FE)
+
+    num, den = butter_filter(butter_args)
     num_digital, den_digital = bilinear(num, den)
-    return num_digital, den_digital
-
-
-def main():
-    butter_args = FilterArgs(500, 750, 0.2, 60, fs=FE)
-
-    num_digital, den_digital = butter_filter(butter_args)
 
     print("Digital numerator coefficients:", num_digital)
     print("Digital denominator coefficients:", den_digital)
 
+    filtered_img = lfilter(num_digital, den_digital, img)
 
-# def test_butter_filter():
-#     butter_args = FilterArgs(500, 750, 0.2, 60, fs=FE)
+    return filtered_img
 
-#     num_digital, den_digital = butter_filter(butter_args)
 
-#     print("Digital numerator coefficients:", num_digital)
-#     print("Digital denominator coefficients:", den_digital)
+def digital_filter_by_hand(img: np.ndarray) -> np.ndarray:
+    butter_args = FilterArgs(500, 750, 0.2, 60, fe=FE)
 
-#     if num_digital is not None and den_digital is not None:
-#         assert np.testing.assert_allclose(
-#             actual=num_digital,
-#             desired=np.array(
-#                 [
-#                     0.58905803,
-#                     -0.98176339,
-#                     0.65450892,
-#                     -0.21816964,
-#                     0.03636161,
-#                     -0.00242411,
-#                 ]
-#             ),
-#         )
-#         assert pytest.approx(den_digital) == pytest.approx(
-#             [
-#                 1.0,
-#                 -3.0684835,
-#                 3.92551916,
-#                 -2.62681375,
-#                 0.92318164,
-#                 -0.13693283,
-#             ]
-#         )
+    res = butter_filter_by_hand(butter_args)
+    H = bilinear_by_hand(*res)
+
+    output = np.array([H(z) for z in img])
+
+    return output
+
+
+def main():
+    img = load_array("goldhill_bruit.npy")
+
+    filtered_img = digital_filter(img)
+
+    save_image(filtered_img, "goldhill_pas_bruit_python.png")
+
+    filtered_img = digital_filter_by_hand(img)
+
+    save_image(filtered_img, "goldhill_pas_bruit_main.png")
+
 
 if __name__ == "__main__":
     main()
