@@ -71,6 +71,14 @@
     #v(1fr)
 ]
 
+#slide[
+  #align(center)[
+    #image("pas_bruit_main.png")
+  ]
+]
+
+== Comparaison
+
 #slide(composer: (1fr, 1fr))[
   #align(center)[
     #image("poles-zeros-main.png")
@@ -81,13 +89,23 @@
   ]
 ]
 
+#slide(composer: (1fr, 1fr))[
+  #align(center)[
+    #image("module-freq-main.png")
+  ]
+][
+  #align(center)[
+    #image("module-freq-ellip.png")
+  ]
+]
+
 == Fonctions Python
 
 #slide(composer: (1fr, 1fr))[
   Type du filtre: Elliptique \
   Ordre: 3
 ][
-  #image("goldhill_pas_bruit_elliptic.png")
+  #image("pas_bruit_ellip.png")
 ]
 
 = Compression de l'image
@@ -95,7 +113,7 @@
 == Équations de la matrice A
 
 #slide(composer: (0.7fr, 1fr))[
- #v(5%)
+ #v(1fr)
  $A = mat(4 ,1; 2, 5)$ \
  #v(5pt)
  $I = mat(1 ,0; 0, 1)$ \
@@ -103,7 +121,9 @@
  $Delta = b² - 4 * a * c$ \
  #v(5pt)
  $lambda_"1,2" = frac(-b ± sqrt(Delta), 2 * a)$ \
+ #v(1fr)
 ][
+  #v(1fr)
   $"det"(A - lambda * I) = (4 - lambda) * (5 - lambda) - 2$ \
   $lambda_"1" = 6$ \
   $lambda_"2" = 3$ \
@@ -111,6 +131,7 @@
   $(A - lambda * I)^(-1) * v = 0$ \
   $v_1 = mat(-1, 1)$ \
   $v_2 = mat(2, 1)$ \
+  #v(1fr)
 ]
 
 == Code python
@@ -136,11 +157,11 @@ transformed_img = np.dot(img, P.T)
 #slide(composer: (1fr, 1fr))[
   50%
   #align(center)[
-    #image("compressed_goldhill.png", height: 80%)
+    #image("compressed.png", height: 80%)
   ]
 ][
   70%
   #align(center)[
-    #image("compressed_goldhill70.png", height: 80%)
+    #image("compressed70.png", height: 80%)
   ]
 ]

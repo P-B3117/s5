@@ -6,11 +6,11 @@ from scipy.signal import bilinear, butter, buttord, lfilter
 from assets import load_array, load_image, save_image
 
 
-def compress_image(image: np.ndarray, keep_ratio: float) -> np.ndarray:
-    k = int(transformed_img.shape[1] * keep_ratio)
+def compressImage(image: np.ndarray, keep_ratio: float) -> np.ndarray:
+    k = int(image.shape[1] * keep_ratio)
 
-    compressed_transformed = np.zeros_like(transformed_img)
-    compressed_transformed[:, :k] = transformed_img[:, :k]
+    compressed_transformed = np.zeros_like(image)
+    compressed_transformed[:, :k] = image[:, :k]
 
     return compressed_transformed
 
@@ -21,21 +21,47 @@ def decompress_image(compressed_image: np.ndarray, P) -> np.ndarray:
     return restored_img
 
 
-img = load_image("goldhill.png")
+def process_image(image: np.ndarray, keep_ratio: float) -> np.ndarray:
+    covariant_img = np.cov(image, rowvar=False)
+    eigenvalues_img, eigenvectors_img = np.linalg.eigh(covariant_img)
 
-covariant_img = np.cov(img, rowvar=False)
-eigenvalues_img, eigenvectors_img = np.linalg.eigh(covariant_img)
+    sorted_idx = np.argsort(eigenvalues_img)[::-1]
+    eigenvalues_img = eigenvalues_img[sorted_idx]
+    eigenvectors_img = eigenvectors_img[:, sorted_idx]
 
-sorted_idx = np.argsort(eigenvalues_img)[::-1]
-eigenvalues_img = eigenvalues_img[sorted_idx]
-eigenvectors_img = eigenvectors_img[:, sorted_idx]
+    P = eigenvectors_img.T
 
-P = eigenvectors_img.T
+    transformed_img = np.dot(image, P.T)
 
-transformed_img = np.dot(img, P.T)
+    compressed_img = compressImage(transformed_img.copy(), keep_ratio)
 
-compressed_img = compress_image(transformed_img, 0.5)
+    decompressed_img = decompress_image(compressed_img, P)
 
-decompressed_img = decompress_image(compressed_img, P)
+    return decompressed_img
 
-save_image(decompressed_img, "compressed_goldhill.png")
+
+if __name__ == "__main__":
+    img = load_image("goldhill.png")
+
+    covariant_img = np.cov(img, rowvar=False)
+    eigenvalues_img, eigenvectors_img = np.linalg.eigh(covariant_img)
+
+    sorted_idx = np.argsort(eigenvalues_img)[::-1]
+    eigenvalues_img = eigenvalues_img[sorted_idx]
+    eigenvectors_img = eigenvectors_img[:, sorted_idx]
+
+    P = eigenvectors_img.T
+
+    transformed_img = np.dot(img, P.T)
+
+    compressed_img = compressImage(transformed_img.copy(), 0.5)
+
+    decompressed_img = decompress_image(compressed_img, P)
+
+    save_image(decompressed_img, "compressed_goldhill.png")
+
+    compressed_img = compressImage(transformed_img.copy(), 0.7)
+
+    decompressed_img = decompress_image(compressed_img, P)
+
+    save_image(decompressed_img, "compressed_goldhill70.png")
