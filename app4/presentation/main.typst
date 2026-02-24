@@ -36,29 +36,111 @@
 = Débruitage
 
 == Transformation bilinéaire
-#v(45%)
-$ 1+1=2 $
+
+#let FE = 1600
+#let FE2 = 2 * FE
+#let fc = 500
+#let wd = 2 * calc.pi * fc / FE
+#let wa = 2 * FE * calc.tan(wd / 2)
+#let wa_cute = calc.round(wa, digits: 0)
+
+#slide(composer: (0.7fr, 1fr))[
+  #v(1fr)
+  $w_d = 2 * pi * f_c / f_e$ \
+  $w_a = 2 * f_e * tan(w_d / 2)$ \
+  $w_a = #wa_cute$ \
+  $s = 2 * f_e * frac(1 - z, 1 + z)$ \
+  $s = FE2 * frac(1 - z, 1 + z)$
+  #v(1fr)
+][
+  #align(center)[
+    #v(1fr)
+    $H(s) = 1 / ((s / w_a)^2 + sqrt(2) * s / w_a + 1)$
+    #v(0.5fr)
+    $H(s) = 1 / ((s / #wa_cute)^2 + sqrt(2) * s / #wa_cute + 1)$
+    #v(0.5fr)
+    $H(z) = H(s) * frac((1 + z)^2, (1 + z)^2)$
+    #v(0.5fr)
+    $H(z) = frac(z² + 2z + 1, 2.3915 * z² + 1.107 * z + 0.5015)$
+    #v(0.5fr)
+    $H(z) = frac(0.42 * z² + 0.847 * z + 0.42, 1 * z² + 0.46 * z + 0.21)$
+    #v(0.5fr)
+  ]
+    $"Num" = "[0.42 0.847 0.42]"$ \
+    $"Den" = "[1 0.46 0.21]"$
+    #v(1fr)
+]
+
+#slide(composer: (1fr, 1fr))[
+  #align(center)[
+    #image("poles-zeros-main.png")
+  ]
+][
+  #align(center)[
+    #image("poles-zeros-ellip.png")
+  ]
+]
 
 == Fonctions Python
 
-#v(5%)
 #slide(composer: (1fr, 1fr))[
-  Type du filtre: Butterworth \
-  Ordre: 1
+  Type du filtre: Elliptique \
+  Ordre: 3
 ][
-  #image("goldhill_pas_bruit_python.png")
+  #image("goldhill_pas_bruit_elliptic.png")
 ]
-
 
 = Compression de l'image
 
 == Équations de la matrice A
 
-#v(5%)
-$ 1+1=2 $
+#slide(composer: (0.7fr, 1fr))[
+ #v(5%)
+ $A = mat(4 ,1; 2, 5)$ \
+ #v(5pt)
+ $I = mat(1 ,0; 0, 1)$ \
+ #v(5pt)
+ $Delta = b² - 4 * a * c$ \
+ #v(5pt)
+ $lambda_"1,2" = frac(-b ± sqrt(Delta), 2 * a)$ \
+][
+  $"det"(A - lambda * I) = (4 - lambda) * (5 - lambda) - 2$ \
+  $lambda_"1" = 6$ \
+  $lambda_"2" = 3$ \
+  #v(10pt)
+  $(A - lambda * I)^(-1) * v = 0$ \
+  $v_1 = mat(-1, 1)$ \
+  $v_2 = mat(2, 1)$ \
+]
 
 == Code python
 
 ```python
-print("Hello world!")
+# covariance
+covariant_img = np.cov(img, rowvar=False)
+
+# valeurs et vecteurs propres
+eigenvalues_img, eigenvectors_img = np.linalg.eigh(covariant_img)
+
+# matrice de passage
+sorted_idx = np.argsort(eigenvalues_img)[::-1]
+eigenvalues_img = eigenvalues_img[sorted_idx]
+eigenvectors_img = eigenvectors_img[:, sorted_idx]
+P = eigenvectors_img.T
+
+transformed_img = np.dot(img, P.T)
 ```
+
+== Images compressées
+
+#slide(composer: (1fr, 1fr))[
+  50%
+  #align(center)[
+    #image("compressed_goldhill.png", height: 80%)
+  ]
+][
+  70%
+  #align(center)[
+    #image("compressed_goldhill70.png", height: 80%)
+  ]
+]
