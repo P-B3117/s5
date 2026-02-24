@@ -1,0 +1,64 @@
+#import "@preview/touying:0.6.1": *
+#import themes.university: *
+#import "@preview/cetz:0.3.2"
+#import "@preview/numbly:0.1.0": numbly
+#import "@preview/theorion:0.3.2": *
+#import cosmos.clouds: *
+#show: show-theorion
+
+// cetz and fletcher bindings for touying
+#let cetz-canvas = touying-reducer.with(reduce: cetz.canvas, cover: cetz.draw.hide.with(bounds: true))
+
+#show: university-theme.with(
+  aspect-ratio: "16-9",
+  // align: horizon,
+  // config-common(handout: true),
+  footer-a: [pouc1302 & stel2002],
+  config-common(frozen-counters: (theorem-counter,)),  // freeze theorem counter for animation
+  config-info(
+    title: [Résolution de la problématique app4],
+    subtitle: [Algèbre linéaire et filtres numériques],
+    author: [Charles Poulin-Bergevin, pouc1302 \ Laurent Stephenne, stel2002],
+    date: datetime(day: 24, month: 2, year: 2026),
+    institution: [Université de Sherbrooke],
+    // logo: image("logo.jpg", width: 20%),
+  ),
+)
+
+#set heading(numbering: numbly("{1}.", default: "1.1"))
+
+#title-slide()
+
+== Outline <touying:hidden>
+
+#components.adaptive-columns(outline(title: none, indent: 1em))
+
+= Débruitage
+
+== Transformation bilinéaire
+#v(45%)
+$ 1+1=2 $
+
+== Fonctions Python
+
+#v(5%)
+#slide(composer: (1fr, 1fr))[
+  Type du filtre: Butterworth \
+  Ordre: 1
+][
+  #image("goldhill_pas_bruit_python.png")
+]
+
+
+= Compression de l'image
+
+== Équations de la matrice A
+
+#v(5%)
+$ 1+1=2 $
+
+== Code python
+
+```python
+print("Hello world!")
+```
