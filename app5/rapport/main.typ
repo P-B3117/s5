@@ -13,11 +13,11 @@
 
 = Introduction
 
-= Probabilitées
+= Probabilités
 
 == Machine à sous
 
-=== Probabilitées d'acquisition de pouvoir
+=== Probabilités d'acquisition de pouvoir
 
 // Calculer les probabilités des 3 approches pour acquérir un pouvoir,
 // pour chacun des 2 cas considérés :
@@ -52,19 +52,19 @@ $f(x) = P(X = x) = (#stack("n", "x"))p^x (1 - p)^(n - x)$
 
 on peut dire que la probabilitée d'Avoir au moins 2 résultats pareils est la probabilitée de ne pas avoir seulement 0 ou 1 résultat pareil.
 
-$ p_"2pareil" =  1 - f(0) - f(1) $ <prob-samesame>
+$ p_"2pareil" = 1 - f(0) - f(1) $ <prob-samesame>
 
 #figure(
-    table(
-      columns: (auto, auto, auto),
-      inset: 10pt,
-      align: horizon,
-      table.header("Approche", "cas 1", "cas 2"),
-      "mêmes pictogrammes", [0.001953125], [0.0016],
-      "pictogrammes différents", [0.65625], [0.192],
-      "2 fois mêmes pictogrammes sur 5 essais", [$3.792389 * 10^-6$], [$2.55184 * 10^-6$],
-    ),
-    caption: "Tableau comparatif des probabilitées des différentes approches",
+  table(
+    columns: (auto, auto, auto),
+    inset: 10pt,
+    align: horizon,
+    table.header("Approche", "cas 1", "cas 2"),
+    "mêmes pictogrammes", [0.001953125], [0.0016],
+    "pictogrammes différents", [0.65625], [0.192],
+    "2 fois mêmes pictogrammes sur 5 essais", [$3.792389 * 10^-6$], [$2.55184 * 10^-6$],
+  ),
+  caption: "Tableau comparatif des probabilitées des différentes approches",
 )<probs-approche>
 
 Utilisant @prob-same, @prob-diff et @prob-samesame on peut donc calculer les résultats du @probs-approche.
@@ -74,15 +74,15 @@ $ mu = E(x) = n*p $ <binomial-average>
 $ mu = E(x) = n * p * (1 - p) $ <binomial-variance>
 
 #figure(
-    table(
-      columns: (auto, auto, auto),
-      inset: 10pt,
-      align: horizon,
-      table.header("2 fois mêmes pictogrammes sur 5 essais", "moyenne", "variance"),
-      "cas 1", [$0.009765$], [$0.0097465$],
-      "cas 1", [$0.008$], [$0.0079872$],
-    ),
-    caption: "Moyenne et Variance du cas iii)",
+  table(
+    columns: (auto, auto, auto),
+    inset: 10pt,
+    align: horizon,
+    table.header("2 fois mêmes pictogrammes sur 5 essais", "moyenne", "variance"),
+    "cas 1", [$0.009765$], [$0.0097465$],
+    "cas 1", [$0.008$], [$0.0079872$],
+  ),
+  caption: "Moyenne et Variance du cas iii)",
 )<binomial-mean-and-variance>
 
 En utilisant la fonction de moyenne (@binomial-average[]) et de variance (@binomial-variance[]), les résultats du tableau @binomial-mean-and-variance[] démontre la variance et la moyenne des deux cas pour l'approche en iii)
@@ -119,8 +119,216 @@ Afin de caractériser la position de la fléchette sur la cible, il faut utilise
 // Probabilité que le personnage ouvre la porte < 1m
 // Probabilité que le personnage ouvre la porte > 10 m
 
-= Statistiques descriptives et inférence statistiques
+= Statistiques descriptives et inférence statistique
+
+== Statistiques descriptives
+
+Les données analysées correspondent aux temps de jeu hebdomadaires (en minutes) de 100 joueurs. Les statistiques descriptives obtenues sont présentées au tableau suivant.
+
+#table(
+  columns: 2,
+  [*Mesure*], [*Valeur*],
+  [Moyenne], [280.58],
+  [Médiane], [279.0],
+  [Mode], [291.0],
+  [Variance], [2537.84],
+  [Écart-type], [50.38],
+  [Minimum], [148.0],
+  [Maximum], [382.0],
+  [Étendue], [234.0],
+)
+
+La moyenne et la médiane étant relativement proches, cela suggère une distribution globalement symétrique des données. L’écart-type relativement élevé (≈ 50 minutes) indique une dispersion notable autour de la moyenne.
+
+== Histogramme et distribution des données
+
+Les données ont été regroupées en 10 classes, déterminées à partir de la règle empirique :
+
+$
+  k approx sqrt{n}
+$
+
+avec $n = 100$.
+
+#table(
+  columns: 6,
+  [*Classe*], [*Intervalle*], [*Centre*], [*Fréquence*], [*Fréq. relative*], [*Fréq. cumulée*],
+
+  [1], [[148.00, 171.40]], [159.70], [2], [0.0200], [2],
+  [2], [[171.40, 194.80]], [183.10], [3], [0.0300], [5],
+  [3], [[194.80, 218.20]], [206.50], [5], [0.0500], [10],
+  [4], [[218.20, 241.60]], [229.90], [8], [0.0800], [18],
+  [5], [[241.60, 265.00]], [253.30], [19], [0.1900], [37],
+  [6], [[265.00, 288.40]], [276.70], [21], [0.2100], [58],
+  [7], [[288.40, 311.80]], [300.10], [16], [0.1600], [74],
+  [8], [[311.80, 335.20]], [323.50], [10], [0.1000], [84],
+  [9], [[335.20, 358.60]], [346.90], [8], [0.0800], [92],
+  [10], [[358.60, 382.00]], [370.30], [8], [0.0800], [100],
+)
+
+L’histogramme présente une forme en cloche, suggérant une distribution normale des données.
+
+#figure(
+  image("hist-data.png"),
+  caption: "Histogramme des temps de jeu hebdomadaires"
+)
+
+== Test de normalité
+
+Un test de normalité de Shapiro-Wilk a été effectué.
+
+- Statistique : 0.9895
+- p-value : 0.628
+
+Avec un seuil de signification $alpha = 0.05$, la p-value étant supérieure à $alpha$, on ne rejette pas l’hypothèse de normalité.
+
+*Conclusion :* les données sont compatibles avec une distribution normale.
+
+== Intervalle de confiance (95%)
+
+L’intervalle de confiance pour la moyenne est donné par :
+
+$
+  "IC" = bar(x) +- z frac(s, sqrt(n))
+$
+
+avec $z = 1.96$.
+
+$
+  "IC"_"95%" = [270.71, 290.45]
+$
+
+Cela signifie qu’avec un niveau de confiance de 95%, la moyenne réelle se situe dans cet intervalle.
+
+== Test d’hypothèse sur la moyenne
+
+On teste l’hypothèse du patron :
+
+- $H_0 : mu >= 300$
+- $H_1 : mu < 300$
+
+Statistique de test :
+
+$
+  Z = frac(bar(x) - mu_0, s / sqrt(n)) = -3.85
+$
+
+p-value :
+
+$
+  5.79 times 10^{-5}
+$
+
+Comme la p-value est inférieure à $alpha = 0.05$, on rejette $H_0$.
+
+*Conclusion :* le temps de jeu moyen est inférieur à 300 minutes.
+
+*Erreur de première espèce :* rejeter $H_0$ alors qu’elle est vraie.
+
+== 2.6 Erreur de deuxième espèce
+
+L’erreur de deuxième espèce correspond au fait de ne pas rejeter $H_0$ alors qu’elle est fausse.
+
+$
+  beta approx 0.0135
+$
+
+Cette valeur indique une faible probabilité de ne pas détecter une différence réelle.
+
+== 2.7 Test d’hypothèse sur la variance
+
+On teste :
+
+- $H_0 : sigma = 50$
+
+Statistique :
+
+$
+  chi^2 = 100.50
+$
+
+Intervalle critique :
+
+$
+  [73.36; 128.42]
+$
+
+Comme la statistique appartient à cet intervalle, on ne rejette pas $H_0$.
+
+*Conclusion :* la variance observée est compatible avec 50.
+
 
 = Simulations de Monte-Carlo
 
+Afin d’estimer le nombre moyen de joueurs connectés à un instant donné, une simulation Monte-Carlo a été réalisée en modélisant les arrivées des joueurs comme un processus de Poisson de taux λ (joueurs/minute), et les temps entre arrivées comme des variables exponentielles générées par la méthode de transformation inverse suivante.
+
+$
+  T = -frac(ln(U), lambda), quad U ~ cal(U)(0, 1)
+$
+
+Les temps de jeu sont modélisés par une variable aléatoire normale ($Q ~ cal(N)(mu, sigma)$), avec :
+
+- $mu = 280.58$ minutes
+- $sigma = 50.38$ minutes
+
+Ces paramètres proviennent de l’analyse statistique effectuée au mandat 2.
+Chaque simulation utilise 1000 réalisations.
+
+== Validation des distributions
+
+#figure(
+  image("hist-simulation.png"),
+  caption: "Histogramme des temps de jeu et temps entre arrivées"
+)
+
+Les histogrammes obtenus montrent que :
+
+- les temps entre arrivées suivent une distribution exponentielle décroissante
+- les temps de jeu suivent une distribution normale en forme de cloche.
+
+Ces observations confirment la validité des modèles probabilistes utilisés.
+
+== Résultats
+
+Les simulations ont été effectuées pour trois valeurs du taux d’arrivée λ :
+
+#figure(
+  table(
+    columns: 2,
+    [*λ (joueurs/min)*], [*Nombre moyen de joueurs*],
+    [10], [2747.79],
+    [50], [13851.17],
+    [100], [28233.37],
+  ),
+  caption: "Résultats des simulations Monte-Carlo pour différentes valeurs de λ",
+)
+
+
+== Analyse
+
+Les résultats obtenus montrent que le nombre moyen de joueurs connectés augmente proportionnellement au taux d’arrivée λ. Cette observation est cohérente avec le modèle théorique :
+
+$
+  N_"moyen" approx lambda times mu
+$
+
+Avec $mu approx 280.58$, les estimations théoriques sont :
+
+- pour $lambda = 10$, environ 2806 joueurs
+- pour $lambda = 50$, environ 14029 joueurs
+- pour $lambda = 100$, environ 28058 joueurs
+
+Les résultats simulés sont très proches de ces valeurs, ce qui valide la cohérence de la simulation.
+
 = Conclusion
+
+L’analyse statistique montre que :
+
+- les données suivent une distribution normale
+- le temps de jeu moyen est inférieur à 300 minutes
+- la variance est cohérente avec une valeur de 50
+
+Ces résultats indiquent que l’estimation initiale du patron est surestimée de 20 minutes, ce qui pourrait influencer les décisions liées à la conception du jeu.
+
+
+La méthode Monte-Carlo permet d’estimer efficacement le nombre moyen de joueurs connectés en tenant compte de la variabilité des arrivées et des durées de jeu. Les résultats obtenus confirment que la charge des serveurs dépend directement du taux d’arrivée des joueurs et du temps moyen de jeu. Ces résultats peuvent être utilisés pour dimensionner adéquatement les infrastructures serveur en fonction de différents scénarios de fréquentation.
