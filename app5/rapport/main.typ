@@ -90,15 +90,22 @@ En utilisant la fonction de moyenne (@binomial-average[]) et de variance (@binom
 
 == Fléchettes
 // Démontrer que X et Y sont indépendantes
+
+L'indépendance de $X$ et $Y$ est claire car aucune relation n'est donnée pour $X$ et $Y$ a comme seule relation $Z$. Cela veut donc dire que $rho_(x y) = 0$ . À cause de cela la fonction de densitée devient:
+
+$ f(x, y) = (frac(1, sqrt(2 pi) sigma_x) e^frac(-x^2, 2 sigma_x^2)) * (frac(1, sqrt(2 pi) sigma_y) e^frac(-y^2, 2 sigma_y^2)) = f(x) * f(y) $
+
+La densité conjointe des 2 variables est équivalente à leurs densitée marginales respective, ce qui démontre qu'il n'y a aucun lien de dépendance entre les 2 variables.
+
 // Covariance entre X et Y
 
 $ sigma_(x y) = E[(X - mu_x)(Y - mu_y)] = E[X Y] - mu_x mu_y $ <fct-covariance>
 
-Afin de déterminer l'indépendance de $X$ et $Y$, il faut prouver que la moyenne du produit de $X$ et $Y$ soit équivalente au produit de leurs moyenne respective.  Pour cela il faut que la fonction @fct-covariance[] soit égale à 0.
+Puisque les 2 variables sont indépendante, il est connu que la covariance de 2 variables indépendantes est de 0. Pour cela, il faut que la fonction @fct-covariance[] soit égale à 0.
 
 $ sigma_(x y) = E[(X - mu_x)(Y - mu_y)] = E[X Y] - mu_x mu_y = 0 $ <fct-covariance-independance>
 
-Cela donne l'équation @fct-covariance-independance[].
+Lorsque
 
 
 // Corrélation entre X et Y
