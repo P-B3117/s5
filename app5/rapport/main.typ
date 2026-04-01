@@ -1,17 +1,19 @@
 #import "template.typ": *
 #show: template.with(
   titre: "Rapport",
-  cours: "Traitement numérique des signaux",
-  code: "GIF570",
+  cours: "Probabilité statistiques et simulations de Monte-Carlo",
+  code: "GIF591",
   auteurs: (
     (nom: "Poulin-Bergevin, Charles", cip: "POUC1302"),
     (nom: "Stéphenne, Laurent", cip: "STEL2002"),
   ),
-  date: "11 février 2026",
+  date: "1er Avril 2026",
   auteurs_footer: true,
 )
 
 = Introduction
+
+Il faut établir différents portraits statistiques sur le nouveau jeux vidéo de la compagnie ZeldUs et afin de compléter notre tâche de probabilitées statistiques, 3 mandats nous sont donnés.
 
 = Probabilités
 
@@ -64,10 +66,12 @@ $ p_"2pareil" = 1 - f(0) - f(1) $ <prob-samesame>
     "pictogrammes différents", [0.65625], [0.192],
     "2 fois mêmes pictogrammes sur 5 essais", [$3.792389 * 10^-6$], [$2.55184 * 10^-6$],
   ),
-  caption: "Tableau comparatif des probabilitées des différentes approches",
+  caption: "Tableau comparatif des probabilitées des différentes approches"
 )<probs-approche>
 
 Utilisant @prob-same, @prob-diff et @prob-samesame on peut donc calculer les résultats du @probs-approche.
+
+=== Moyenne et variance de iii)
 
 $ mu = E(x) = n*p $ <binomial-average>
 
@@ -80,9 +84,9 @@ $ mu = E(x) = n * p * (1 - p) $ <binomial-variance>
     align: horizon,
     table.header("2 fois mêmes pictogrammes sur 5 essais", "moyenne", "variance"),
     "cas 1", [$0.009765$], [$0.0097465$],
-    "cas 1", [$0.008$], [$0.0079872$],
+    "cas 2", [$0.008$], [$0.0079872$],
   ),
-  caption: "Moyenne et Variance du cas iii)",
+  caption: "Moyenne et Variance du cas iii)"
 )<binomial-mean-and-variance>
 
 En utilisant la fonction de moyenne (@binomial-average[]) et de variance (@binomial-variance[]), les résultats du tableau @binomial-mean-and-variance[] démontre la variance et la moyenne des deux cas pour l'approche en iii)
@@ -91,6 +95,8 @@ En utilisant la fonction de moyenne (@binomial-average[]) et de variance (@binom
 == Fléchettes
 // Démontrer que X et Y sont indépendantes
 
+=== Indépendance des variables <independance-des-variables>
+
 L'indépendance de $X$ et $Y$ est claire car aucune relation n'est donnée pour $X$ et $Y$ a comme seule relation $Z$. Cela veut donc dire que $rho_(x y) = 0$ . À cause de cela la fonction de densitée devient:
 
 $ f(x, y) = (frac(1, sqrt(2 pi) sigma_x) e^frac(-x^2, 2 sigma_x^2)) * (frac(1, sqrt(2 pi) sigma_y) e^frac(-y^2, 2 sigma_y^2)) = f(x) * f(y) $
@@ -98,6 +104,7 @@ $ f(x, y) = (frac(1, sqrt(2 pi) sigma_x) e^frac(-x^2, 2 sigma_x^2)) * (frac(1, s
 La densité conjointe des 2 variables est équivalente à leurs densitée marginales respective, ce qui démontre qu'il n'y a aucun lien de dépendance entre les 2 variables.
 
 // Covariance entre X et Y
+=== Covariance entre $X$ et $Y$
 
 $ sigma_(x y) = E[(X - mu_x)(Y - mu_y)] = E[X Y] - mu_x mu_y $ <fct-covariance>
 
@@ -105,19 +112,114 @@ Puisque les 2 variables sont indépendante, il est connu que la covariance de 2 
 
 $ sigma_(x y) = E[(X - mu_x)(Y - mu_y)] = E[X Y] - mu_x mu_y = 0 $ <fct-covariance-independance>
 
-Lorsque
-
-
 // Corrélation entre X et Y
-// Fonctions de densité de probabilité conditionnelle f(x, y|z)
 
-$ P(B|A) = frac(P(A inter B), P(A)) $ <fct-prob-conjointe>
+=== Corrélation $X$ et $Y$
 
-Afin de caractériser la position de la fléchette sur la cible, il faut utiliser la fonction de densité de probabilité conjointe (@fct-prob-conjointe).
+La corrélation est de 0 puisque $X$ et $Y$ sont indépendants comme expliqué dans la section @independance-des-variables[].
+
 // Fonctions de densité de probabilité marginale f(x|z)
+=== Fonctions de densité de probabilité marginale $f(x | z)$
+
+$ f(x | z) = frac(1, sigma_x sqrt(2 pi)) e^(frac(-x^2, 2 (sigma_x)^2)) \
+  f(x) = frac(1, 0.1 sqrt(2 pi)) e^(frac(-x^2, 2 (0.1)^2)) $ <densité-marginale-x>
+
+En lisant l'énoncé, il est compris que x ne dépend nullement de z car l'écart type ($sigma$) ne change jamais (donc il n'est pas affecté par z)
+
 // Fonctions de densité de probabilité marginale f(y|z)
-// Probabilité que le personnage ouvre la porte < 1m
-// Probabilité que le personnage ouvre la porte > 10 m
+=== Fonctions de densité de probabilité marginale $f(y | z)$
+
+$ f(y | z) = frac(1, sigma_y (z) sqrt(2 pi)) e^(frac(-x^2, 2 (sigma_y  (z))^2)) \
+  f(y | z > 10) = frac(1, 0.4 sqrt(2 pi)) e^(frac(-x^2, 2 (0.4)^2)) \
+  f(y | z < 1) = frac(1, 0.05 sqrt(2 pi)) e^(frac(-x^2, 2 (0.05)^2)) $ <densité-marginale-y>
+
+// Fonctions de densité de probabilité conditionnelle f(x, y|z)
+=== Fonctions de densité de probabilité conditionnelle $f(x, y|z)$
+
+$ f(x, y|z) = frac(1, sigma_y (z) sqrt(2 pi)) e^(frac(-x^2, 2 (sigma_y  (z))^2)) * frac(1, sigma_x sqrt(2 pi)) e^(frac(-x^2, 2 (sigma_x)^2)) \
+f(x, y | z ) = frac(1, 2 pi sigma_x sigma_y (z)) * e^( -1/2 (frac(x^2, (sigma_x)^2) + frac(y^2, (sigma_y)^2 (z)) )) \
+f(x, y | z > 10) = frac(1, 2 pi 0.1 * 0.4) * e^( -1/2 (frac(x^2, (0.1)^2) + frac(y^2, (0.4)^2) )) \
+f(x, y | z < 10) = frac(1, 2 pi 0.1 * 0.05) * e^( -1/2 (frac(x^2, (0.1)^2) + frac(y^2, (0.05)^2) ))
+$ <densité-marginale-xy>
+
+La fonction de densité de probabilité conditionnelle se construit avec les équations de probabilitées marginales comme mentionné précedemment dans la section @independance-des-variables[]. On utilise donc les équations @densité-marginale-x[] et @densité-marginale-y[] en les multipliant ensembles afin d'obtenir la fonction @densité-marginale-xy[]
+
+=== Probabilitées d'ouverture de la porte
+
+#figure(
+  table(
+    columns: (auto, auto),
+    inset: 10pt,
+    align: horizon,
+    table.header("Distance de tir", "Probabilité"),
+    "z < 1m", [$0.5918$],
+    "z > 10m", [$0.1166$],
+  ),
+  caption: "Probabilité d'ouverture de la porte en fonction de z"
+)<resultats-monte-carlo-flechettes>
+
+Afin d'évaluer la probabilité d'ouverture de la porte par le joueur, une simulation de monte-carlo avec 10 000 points a été produite afin d'obtenir les résultats présentés dans le tableau @resultats-monte-carlo-flechettes. Le code suivant a été utilisé pour établir ces résultats:
+
+```python
+class target:
+    def __init__(
+        self,
+    ):
+        self.center: tuple[float, float] = (0, 0)
+        self.radius: float = 0.1
+
+    def distance(self, point: tuple[float, float]) -> float:
+        return (
+            (point[0] - self.center[0]) ** 2 + (point[1] - self.center[1]) ** 2
+        ) ** 0.5
+
+    def contains(self, point: tuple[float, float]) -> bool:
+        return self.distance(point) <= self.radius
+
+
+def gen_points(
+    sigma: tuple[float, float], mu: tuple[float, float], n: int
+) -> list[tuple[float, float]]:
+    xpoints = np.random.normal(mu[0], sigma[0], n)
+    ypoints = np.random.normal(mu[1], sigma[1], n)
+
+    return list(zip(xpoints, ypoints))
+
+
+def flechettes():
+    print("Testing flechette's probability with monte carlo")
+    tar = target()
+
+    sigma_x: float = 0.1  # écart-type
+    mu_x: float = 0.0  # moyenne
+    mu_y: float = 0.0  # moyenne
+    n = 10000
+
+    print(f"n = {n}")
+
+    # z < 1m: sigma_y = 0.05
+    print("z < 1m: sigma_y = 0.05")
+
+    sigma_y: float = 0.05  # écart-type
+
+    points = gen_points((sigma_x, sigma_y), (mu_x, mu_y), n)
+    hits = sum(tar.contains(point) for point in points)
+    print(f"    Hits: {hits}")
+    print(f"    Probability: {hits / n}")
+
+    # z > 10m: sigma_y = 0.4
+    print("z > 10m: sigma_y = 0.4")
+
+    sigma_y = 0.4
+
+    points = gen_points((sigma_x, sigma_y), (mu_x, mu_y), n)
+    hits = sum(tar.contains(point) for point in points)
+    print(f"    Hits: {hits}")
+    print(f"    Probability: {hits / n}")
+
+if __name__ == "__main__":
+    flechettes()
+```
 
 = Statistiques descriptives et inférence statistique
 
